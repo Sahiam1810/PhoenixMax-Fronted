@@ -1,0 +1,1 @@
+export function MiCuenta() { return <section><h1 className="text-2xl font-bold">Mi cuenta</h1><div className="mt-4 flex gap-4"><button type="button">Mis servicios</button><button type="button">Mis compras</button></div></section> }
