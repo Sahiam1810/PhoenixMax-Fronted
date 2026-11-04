@@ -1,0 +1,9 @@
+@import "tailwindcss";
+
+@theme {
+    --color-brand: #6d28d9;
+}
+
+body {
+    @apply min-w-80 bg-slate-50 text-slate-900;
+}
