@@ -109,7 +109,8 @@ Respuesta 200: `data` es el objeto `usuario` de arriba.
 
 ### GET /productos
 
-Query opcional: `?plataforma=<plataformaId>&tipo=cuenta|pantalla`. Sin paginación.
+Query opcional: `?plataforma=<plataformaId>&tipo=cuenta|pantalla`. 
+- Por desicion se va a hacer paginado, con paginacion 
 
 ```json
 { "message": "Productos obtenidos", "data": [
