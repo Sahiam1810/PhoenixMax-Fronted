@@ -105,8 +105,12 @@ export function Insignia({ children, className = "bg-slate-100 text-slate-700" }
 export function TituloSeccion({ children, id }: { children: ReactNode, id?: string }) {
     return (
         <div className="mb-8" id={id}>
-            <h2 className="text-2xl font-bold tracking-tight text-ink sm:text-3xl">{children}</h2>
-            <span className="mt-3 block h-1 w-12 rounded-full bg-brand" />
+            <h2
+                className="inline-block bg-brand py-3 pl-6 pr-12 text-xl font-bold tracking-tight text-ink sm:text-2xl"
+                style={{ clipPath: "polygon(0 0, calc(100% - 1.5rem) 0, 100% 50%, calc(100% - 1.5rem) 100%, 0 100%)" }}
+            >
+                {children}
+            </h2>
         </div>
     )
 }
@@ -128,9 +132,9 @@ export function FondoImagen({ src, className = "", children }: { src: string, cl
     return (
         <div
             className={`relative overflow-hidden bg-ink bg-cover bg-center ${className}`}
-            style={{ backgroundImage: `url("${src}"), radial-gradient(ellipse 70% 60% at 50% 0%, #ff7a1a 0%, #c2410c 35%, rgba(11, 9, 7, 0) 75%), radial-gradient(ellipse 50% 40% at 85% 30%, rgba(255, 176, 92, 0.55) 0%, rgba(11, 9, 7, 0) 70%)` }}
+            style={{ backgroundImage: `url("${src}")` }}
         >
-            <div className="absolute inset-0 bg-gradient-to-b from-ink/20 via-ink/50 to-ink" />
+            <div className="absolute inset-0 bg-ink/60" />
             <div className="relative">{children}</div>
         </div>
     )

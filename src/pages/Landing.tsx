@@ -1,8 +1,16 @@
 import { Link } from "react-router-dom"
 import { IconoEscudo, IconoRayo, IconoSoporte } from "../components/iconos"
+import { ProgresoSecciones, type SeccionProgreso } from "../components/ProgresoSecciones"
 import { Contenedor, FondoImagen, TituloSeccion } from "../components/ui"
 import { VistaCatalogo } from "../components/VistaCatalogo"
 import { useAuth } from "../context/AuthContext"
+
+const secciones: SeccionProgreso[] = [
+    { id: "inicio", titulo: "Inicio" },
+    { id: "como-funciona", titulo: "Cómo funciona" },
+    { id: "catalogo", titulo: "Catálogo" },
+    { id: "preguntas", titulo: "Preguntas frecuentes" }
+]
 
 const beneficios = [
     { icono: IconoEscudo, titulo: "Pago seguro", texto: "Tus credenciales se liberan solo cuando el pago está confirmado." },
@@ -29,43 +37,46 @@ export function Landing() {
 
     return (
         <div>
-            <FondoImagen src="/img/hero.jpg" className="-mt-[4.5rem] text-white">
-                <Contenedor className="pb-16 pt-36 sm:pb-24 sm:pt-48">
-                    <h1 className="mx-auto max-w-4xl text-center font-display text-4xl leading-[1.1] sm:text-6xl">
-                        Bienvenido al servicio de venta de cuentas más grande de Latinoamérica
-                    </h1>
-                    <p className="mx-auto mt-5 max-w-xl text-center text-white/75 sm:text-lg">
-                        Streaming, inteligencia artificial y edición en un solo lugar, con entrega inmediata.
-                    </p>
-                    <div className="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
-                        <a href="#catalogo" className="rounded-full bg-brand px-7 py-3 text-center text-sm font-bold text-ink transition-colors hover:bg-brand-600">Ver catálogo</a>
-                        {!usuario && <Link to="/registro" className="rounded-full bg-white px-7 py-3 text-center text-sm font-bold text-ink transition-colors hover:bg-brand-50">Crear cuenta</Link>}
-                    </div>
-
-                    <ul className="mt-20 grid gap-8 border-t border-white/15 pt-12 sm:grid-cols-3">
-                        {beneficios.map(({ icono: Icono, titulo, texto }) => (
-                            <li key={titulo} className="text-center sm:text-left">
-                                <Icono className="mx-auto size-7 text-brand sm:mx-0" />
-                                <p className="mt-3 text-lg font-semibold">{titulo}</p>
-                                <p className="mt-1 text-sm text-white/60">{texto}</p>
-                            </li>
-                        ))}
-                    </ul>
-
-                    <div id="como-funciona" className="mt-20 scroll-mt-24">
-                        <h2 className="text-center font-display text-3xl sm:text-4xl">Cómo funciona</h2>
-                        <ol className="mt-10 grid gap-4 sm:grid-cols-3">
-                            {pasos.map((paso, indice) => (
-                                <li key={paso.titulo} className="rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
-                                    <span className="font-mono text-sm text-brand">{String(indice + 1).padStart(2, "0")}</span>
-                                    <p className="mt-3 text-xl font-bold">{paso.titulo}</p>
-                                    <p className="mt-1 text-sm text-white/65">{paso.texto}</p>
+            <ProgresoSecciones secciones={secciones} />
+            <section id="inicio" className="-mt-[4.5rem]">
+                <FondoImagen src="/img/hero.jpg" className="text-white">
+                    <Contenedor className="pb-16 pt-36 sm:pb-24 sm:pt-48">
+                        <h1 className="mx-auto max-w-4xl text-center font-display text-4xl leading-[1.1] sm:text-6xl">
+                            Bienvenido al servicio de venta de cuentas más grande de Latinoamérica
+                        </h1>
+                        <p className="mx-auto mt-5 max-w-xl text-center text-white/75 sm:text-lg">
+                            Streaming, inteligencia artificial y edición en un solo lugar, con entrega inmediata.
+                        </p>
+                        <div className="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
+                            <a href="#catalogo" className="rounded-full bg-brand px-7 py-3 text-center text-sm font-bold text-ink transition-colors hover:bg-brand-600">Ver catálogo</a>
+                            {!usuario && <Link to="/registro" className="rounded-full bg-white px-7 py-3 text-center text-sm font-bold text-ink transition-colors hover:bg-brand-50">Crear cuenta</Link>}
+                        </div>
+    
+                        <ul className="mt-20 grid gap-8 border-t border-white/15 pt-12 sm:grid-cols-3">
+                            {beneficios.map(({ icono: Icono, titulo, texto }) => (
+                                <li key={titulo} className="text-center sm:text-left">
+                                    <Icono className="mx-auto size-7 text-brand sm:mx-0" />
+                                    <p className="mt-3 text-lg font-semibold">{titulo}</p>
+                                    <p className="mt-1 text-sm text-white/60">{texto}</p>
                                 </li>
                             ))}
-                        </ol>
-                    </div>
-                </Contenedor>
-            </FondoImagen>
+                        </ul>
+    
+                        <div id="como-funciona" className="mt-20 scroll-mt-24">
+                            <TituloSeccion>Cómo funciona</TituloSeccion>
+                            <ol className="grid gap-4 sm:grid-cols-3">
+                                {pasos.map((paso, indice) => (
+                                    <li key={paso.titulo} className="rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
+                                        <span className="font-mono text-sm text-brand">{String(indice + 1).padStart(2, "0")}</span>
+                                        <p className="mt-3 text-xl font-bold">{paso.titulo}</p>
+                                        <p className="mt-1 text-sm text-white/65">{paso.texto}</p>
+                                    </li>
+                                ))}
+                            </ol>
+                        </div>
+                    </Contenedor>
+                </FondoImagen>
+            </section>
 
             <Contenedor className="space-y-20 pt-16 sm:space-y-24 sm:pt-20">
                 <section id="catalogo" className="scroll-mt-24">
