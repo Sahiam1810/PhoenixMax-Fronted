@@ -1,18 +1,8 @@
 import { Link } from "react-router-dom"
 import { IconoEscudo, IconoRayo, IconoSoporte } from "../components/iconos"
-import { ProductCard } from "../components/ProductCard"
-import { Aviso, Cargando, LogoPlataforma, TituloSeccion } from "../components/ui"
+import { Contenedor, FondoImagen, TituloSeccion } from "../components/ui"
+import { VistaCatalogo } from "../components/VistaCatalogo"
 import { useAuth } from "../context/AuthContext"
-import { useCarga } from "../hooks/useCarga"
-import { etiquetaCategoria } from "../lib/formato"
-import { plataformasService } from "../services/plataformasService"
-import { productosService } from "../services/productosService"
-import type { Categoria } from "../types"
-
-const cargarPlataformas = () => plataformasService.listar()
-const cargarProductos = () => productosService.listar()
-
-const categorias: Categoria[] = ["streaming", "ia", "edicion"]
 
 const beneficios = [
     { icono: IconoEscudo, titulo: "Pago seguro", texto: "Tus credenciales se liberan solo cuando el pago está confirmado." },
@@ -36,97 +26,69 @@ const preguntas = [
 
 export function Landing() {
     const { usuario } = useAuth()
-    const plataformas = useCarga(cargarPlataformas)
-    const productos = useCarga(cargarProductos)
-    const destacados = (productos.data ?? []).filter((item) => item.stock > 0).slice(0, 6)
 
     return (
-        <div className="space-y-14 sm:space-y-20">
-            <section className="rounded-3xl bg-ink px-6 py-12 text-white sm:px-12 sm:py-16">
-                <h1 className="mx-auto max-w-3xl text-center text-2xl font-extrabold leading-tight sm:text-4xl">
-                    Bienvenido al servicio de venta de cuentas más grande de Latinoamérica
-                </h1>
-                <p className="mx-auto mt-4 max-w-xl text-center text-sm text-white/70 sm:text-base">
-                    Streaming, inteligencia artificial y edición en un solo lugar, con entrega inmediata.
-                </p>
-                <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-                    <Link to="/catalogo" className="rounded-lg bg-brand px-6 py-3 text-center text-sm font-bold text-ink transition-colors hover:bg-brand-600">Ver catálogo</Link>
-                    {!usuario && <Link to="/registro" className="rounded-lg border border-white/30 px-6 py-3 text-center text-sm font-bold transition-colors hover:bg-white/10">Crear cuenta</Link>}
-                </div>
-                <ul className="mt-12 grid gap-6 sm:grid-cols-3">
-                    {beneficios.map(({ icono: Icono, titulo, texto }) => (
-                        <li key={titulo} className="text-center">
-                            <Icono className="mx-auto size-7 text-brand" />
-                            <p className="mt-3 text-lg font-semibold">{titulo}</p>
-                            <p className="mt-1 text-sm text-white/60">{texto}</p>
-                        </li>
-                    ))}
-                </ul>
-            </section>
+        <div>
+            <FondoImagen src="/img/hero.jpg" className="-mt-[4.5rem] text-white">
+                <Contenedor className="pb-16 pt-36 sm:pb-24 sm:pt-48">
+                    <h1 className="mx-auto max-w-4xl text-center font-display text-4xl leading-[1.1] sm:text-6xl">
+                        Bienvenido al servicio de venta de cuentas más grande de Latinoamérica
+                    </h1>
+                    <p className="mx-auto mt-5 max-w-xl text-center text-white/75 sm:text-lg">
+                        Streaming, inteligencia artificial y edición en un solo lugar, con entrega inmediata.
+                    </p>
+                    <div className="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
+                        <a href="#catalogo" className="rounded-full bg-brand px-7 py-3 text-center text-sm font-bold text-ink transition-colors hover:bg-brand-600">Ver catálogo</a>
+                        {!usuario && <Link to="/registro" className="rounded-full bg-white px-7 py-3 text-center text-sm font-bold text-ink transition-colors hover:bg-brand-50">Crear cuenta</Link>}
+                    </div>
 
-            <section>
-                <TituloSeccion>Categorías</TituloSeccion>
-                <div className="grid grid-cols-3 gap-3 sm:mx-auto sm:max-w-2xl sm:gap-6">
-                    {categorias.map((categoria) => (
-                        <Link key={categoria} to={`/catalogo?categoria=${categoria}`} className="rounded-xl bg-suave py-4 text-center text-sm font-bold transition-colors duration-150 hover:bg-brand">
-                            {etiquetaCategoria[categoria]}
-                        </Link>
-                    ))}
-                </div>
-            </section>
+                    <ul className="mt-20 grid gap-8 border-t border-white/15 pt-12 sm:grid-cols-3">
+                        {beneficios.map(({ icono: Icono, titulo, texto }) => (
+                            <li key={titulo} className="text-center sm:text-left">
+                                <Icono className="mx-auto size-7 text-brand sm:mx-0" />
+                                <p className="mt-3 text-lg font-semibold">{titulo}</p>
+                                <p className="mt-1 text-sm text-white/60">{texto}</p>
+                            </li>
+                        ))}
+                    </ul>
 
-            <section>
-                <TituloSeccion>Plataformas destacadas</TituloSeccion>
-                {plataformas.cargando && <Cargando />}
-                {plataformas.error && <Aviso tipo="error">{plataformas.error}</Aviso>}
-                <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 sm:gap-3 lg:grid-cols-7">
-                    {(plataformas.data ?? []).map((plataforma) => (
-                        <Link key={plataforma.id} to={`/catalogo?plataforma=${plataforma.id}`} className="transition-transform duration-150 hover:-translate-y-0.5">
-                            <LogoPlataforma plataforma={plataforma} className="aspect-square rounded-2xl" />
-                        </Link>
-                    ))}
-                </div>
-            </section>
+                    <div id="como-funciona" className="mt-20 scroll-mt-24">
+                        <h2 className="text-center font-display text-3xl sm:text-4xl">Cómo funciona</h2>
+                        <ol className="mt-10 grid gap-4 sm:grid-cols-3">
+                            {pasos.map((paso, indice) => (
+                                <li key={paso.titulo} className="rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
+                                    <span className="font-mono text-sm text-brand">{String(indice + 1).padStart(2, "0")}</span>
+                                    <p className="mt-3 text-xl font-bold">{paso.titulo}</p>
+                                    <p className="mt-1 text-sm text-white/65">{paso.texto}</p>
+                                </li>
+                            ))}
+                        </ol>
+                    </div>
+                </Contenedor>
+            </FondoImagen>
 
-            <section>
-                <TituloSeccion>Catálogo</TituloSeccion>
-                {productos.cargando && <Cargando />}
-                {productos.error && <Aviso tipo="error">{productos.error}</Aviso>}
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                    {destacados.map((producto) => <ProductCard key={producto.id} producto={producto} />)}
-                </div>
-                <div className="mt-6 text-center">
-                    <Link to="/catalogo" className="inline-block rounded-lg bg-ink px-6 py-3 text-sm font-bold text-white transition-colors hover:bg-neutral-800">Ver todo el catálogo</Link>
-                </div>
-            </section>
+            <Contenedor className="space-y-20 pt-16 sm:space-y-24 sm:pt-20">
+                <section id="catalogo" className="scroll-mt-24">
+                    <TituloSeccion>Catálogo</TituloSeccion>
+                    <VistaCatalogo />
+                </section>
 
-            <section>
-                <TituloSeccion>Cómo funciona</TituloSeccion>
-                <ol className="grid gap-4 sm:grid-cols-3">
-                    {pasos.map((paso, indice) => (
-                        <li key={paso.titulo} className="rounded-2xl border border-slate-200 p-6">
-                            <span className="grid size-10 place-items-center rounded-full bg-brand text-lg font-extrabold">{indice + 1}</span>
-                            <p className="mt-4 text-lg font-bold">{paso.titulo}</p>
-                            <p className="mt-1 text-sm text-slate-600">{paso.texto}</p>
-                        </li>
-                    ))}
-                </ol>
-            </section>
-
-            <section id="preguntas" className="scroll-mt-24">
-                <TituloSeccion>Preguntas frecuentes</TituloSeccion>
-                <div className="divide-y divide-slate-200 rounded-2xl border border-slate-200">
-                    {preguntas.map((item) => (
-                        <details key={item.pregunta} className="group px-5 py-4">
-                            <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-semibold">
-                                {item.pregunta}
-                                <span className="text-xl leading-none text-slate-400 transition-transform duration-150 group-open:rotate-45">+</span>
-                            </summary>
-                            <p className="mt-3 text-sm text-slate-600">{item.respuesta}</p>
-                        </details>
-                    ))}
-                </div>
-            </section>
+                <section id="preguntas" className="scroll-mt-24">
+                    <TituloSeccion>Preguntas frecuentes</TituloSeccion>
+                    <div className="space-y-3">
+                        {preguntas.map((item, indice) => (
+                            <details key={item.pregunta} className="group rounded-2xl border border-slate-200 px-5 py-4 transition-colors open:bg-brand-50/60">
+                                <summary className="flex cursor-pointer list-none items-center gap-4 font-semibold">
+                                    <span className="font-mono text-xs text-slate-400">{String(indice + 1).padStart(2, "0")}</span>
+                                    <span className="flex-1">{item.pregunta}</span>
+                                    <span className="text-xl leading-none text-slate-400 transition-transform duration-150 group-open:rotate-45">+</span>
+                                </summary>
+                                <p className="mt-3 pl-9 text-sm text-slate-600">{item.respuesta}</p>
+                            </details>
+                        ))}
+                    </div>
+                </section>
+            </Contenedor>
         </div>
     )
 }

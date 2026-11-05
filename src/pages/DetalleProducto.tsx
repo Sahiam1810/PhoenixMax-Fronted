@@ -93,7 +93,7 @@ export function DetalleProducto() {
             </Link>
             <div className="grid gap-8 lg:grid-cols-2">
                 <div className="space-y-4">
-                    <LogoPlataforma plataforma={producto.plataforma} className="aspect-[4/3] rounded-3xl [&>span:first-child]:text-3xl sm:[&>span:first-child]:text-5xl" />
+                    <LogoPlataforma plataforma={producto.plataforma} tamano="grande" className="aspect-[4/3] rounded-3xl" />
                     <p className="text-sm text-slate-600">{producto.plataforma.descripcion}</p>
                 </div>
                 <div className="space-y-6">

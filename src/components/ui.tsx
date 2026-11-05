@@ -1,6 +1,6 @@
-import type { ButtonHTMLAttributes, InputHTMLAttributes, ReactNode, SelectHTMLAttributes } from "react"
+import { useState, type ButtonHTMLAttributes, type InputHTMLAttributes, type ReactNode, type SelectHTMLAttributes } from "react"
 import type { Plataforma } from "../types"
-import { IconoMas, IconoMenos, LogoAlas } from "./iconos"
+import { IconoMas, IconoMenos, LogoFenix } from "./iconos"
 
 type VarianteBoton = "primario" | "marca" | "secundario" | "peligro" | "fantasma"
 
@@ -72,7 +72,7 @@ type TipoAviso = "error" | "exito" | "info" | "alerta"
 const estilosAviso: Record<TipoAviso, string> = {
     error: "border-red-200 bg-red-50 text-red-700",
     exito: "border-emerald-200 bg-emerald-50 text-emerald-700",
-    info: "border-sky-200 bg-sky-50 text-sky-800",
+    info: "border-brand-100 bg-brand-50 text-brand-700",
     alerta: "border-amber-200 bg-amber-50 text-amber-800"
 }
 
@@ -114,20 +114,57 @@ export function TituloSeccion({ children, id }: { children: ReactNode, id?: stri
     )
 }
 
-export function Marca({ grande = false }: { grande?: boolean }) {
+export function Marca({ grande = false, clara = false }: { grande?: boolean, clara?: boolean }) {
     return (
-        <span className={`inline-flex items-center gap-2 font-extrabold tracking-tight text-ink ${grande ? "text-4xl sm:text-6xl" : "text-lg"}`}>
-            <LogoAlas className={`text-white ${grande ? "h-12 w-14 sm:h-16 sm:w-20" : "h-6 w-7"}`} />
+        <span className={`inline-flex items-center font-extrabold tracking-tight ${clara ? "text-white" : "text-ink"} ${grande ? "gap-4 text-4xl sm:text-6xl" : "gap-2.5 text-lg"}`}>
+            <span className={`grid place-items-center bg-ink text-brand ${grande ? "size-16 rounded-2xl sm:size-20" : "size-9 rounded-xl"}`}>
+                <LogoFenix className={grande ? "size-12 sm:size-16" : "size-7"} />
+            </span>
             PhoenixMax
         </span>
     )
 }
 
-export function LogoPlataforma({ plataforma, className = "" }: { plataforma: Plataforma, className?: string }) {
+export function Contenedor({ children, className = "" }: { children: ReactNode, className?: string }) {
+    return <div className={`mx-auto w-full max-w-6xl px-6 sm:px-12 lg:px-20 ${className}`}>{children}</div>
+}
+
+export function FondoImagen({ src, className = "", children }: { src: string, className?: string, children?: ReactNode }) {
     return (
-        <div className={`relative flex items-center justify-center overflow-hidden bg-ink p-3 text-center ${className}`}>
-            <span className="text-base font-extrabold leading-tight text-white">{plataforma.nombre}</span>
-            <span className="absolute inset-x-0 bottom-0 h-1.5" style={{ backgroundColor: plataforma.color }} />
+        <div
+            className={`relative overflow-hidden bg-ink bg-cover bg-center ${className}`}
+            style={{ backgroundImage: `url("${src}"), radial-gradient(ellipse 70% 60% at 50% 0%, #ff7a1a 0%, #c2410c 35%, rgba(11, 9, 7, 0) 75%), radial-gradient(ellipse 50% 40% at 85% 30%, rgba(255, 176, 92, 0.55) 0%, rgba(11, 9, 7, 0) 70%)` }}
+        >
+            <div className="absolute inset-0 bg-gradient-to-b from-ink/20 via-ink/50 to-ink" />
+            <div className="relative">{children}</div>
+        </div>
+    )
+}
+
+function inicial(nombre: string) {
+    const limpio = nombre.trim()
+    return `${limpio.charAt(0).toUpperCase()}${limpio.endsWith("+") ? "+" : ""}`
+}
+
+export function IconoPlataforma({ plataforma, className = "size-12 text-xl" }: { plataforma: Plataforma, className?: string }) {
+    const [fallo, setFallo] = useState(false)
+    if (plataforma.logoUrl && !fallo) {
+        return <img src={plataforma.logoUrl} alt={`Logo de ${plataforma.nombre}`} onError={() => setFallo(true)} className={`object-contain ${className}`} />
+    }
+    return (
+        <span aria-hidden="true" className={`grid place-items-center rounded-2xl font-black text-white ${className}`} style={{ backgroundColor: plataforma.color }}>
+            {inicial(plataforma.nombre)}
+        </span>
+    )
+}
+
+export function LogoPlataforma({ plataforma, className = "", tamano = "normal" }: { plataforma: Plataforma, className?: string, tamano?: "mini" | "normal" | "grande" }) {
+    const icono = tamano === "mini" ? "size-7 text-xs rounded-lg" : tamano === "grande" ? "size-24 text-4xl sm:size-32 sm:text-5xl" : "size-12 text-xl"
+    return (
+        <div className={`relative flex flex-col items-center justify-center gap-2 overflow-hidden bg-ink p-2 text-center ${className}`}>
+            <IconoPlataforma plataforma={plataforma} className={icono} />
+            {tamano !== "mini" && <span className={`font-bold leading-tight text-white ${tamano === "grande" ? "text-2xl" : "text-xs"}`}>{plataforma.nombre}</span>}
+            <span className="absolute inset-x-0 bottom-0 h-1" style={{ backgroundColor: plataforma.color }} />
         </div>
     )
 }

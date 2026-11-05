@@ -57,10 +57,10 @@ export function MenuCuenta({ usuario }: { usuario: Usuario }) {
                 aria-haspopup="menu"
                 aria-expanded={abierto}
                 onClick={() => setAbierto((valor) => !valor)}
-                className="flex items-center gap-2 rounded-full py-1 pl-1 pr-2 transition-colors hover:bg-black/5 sm:pl-3"
+                className="inline-flex h-10 items-center gap-2 rounded-full bg-white pl-1 pr-2.5 text-ink shadow-sm ring-1 ring-black/5 transition-colors duration-150 hover:bg-brand-50 sm:pl-4"
             >
                 <span className="hidden max-w-32 truncate text-sm font-bold sm:inline">{usuario.nombre.split(" ")[0]}</span>
-                <span className="grid size-9 place-items-center rounded-full bg-ink text-xs font-bold text-white">{iniciales(usuario.nombre)}</span>
+                <span className="grid size-8 place-items-center rounded-full bg-ink text-xs font-bold text-white">{iniciales(usuario.nombre)}</span>
                 <IconoChevron className={`size-4 transition-transform duration-150 ${abierto ? "rotate-180" : ""}`} />
             </button>
             {abierto && (

@@ -13,7 +13,7 @@ const cargarPlataformas = () => adminService.plataformas()
 
 const coloresEstado: Record<EstadoCuenta, string> = {
     disponible: "bg-emerald-100 text-emerald-800",
-    parcial: "bg-sky-100 text-sky-800",
+    parcial: "bg-brand-100 text-brand-700",
     vendida: "bg-slate-200 text-slate-700",
     inactiva: "bg-red-100 text-red-700"
 }

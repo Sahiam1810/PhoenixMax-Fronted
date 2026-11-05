@@ -83,7 +83,7 @@ export const adminMock: AdminService = {
         const plataforma = transaccion((base) => {
             adminSesion(base)
             if (base.plataformas.some((item) => item.nombre.toLowerCase() === input.nombre.trim().toLowerCase())) fallo("Ya existe esa plataforma", 409)
-            const nueva = { ...input, nombre: input.nombre.trim(), id: siguienteId(base.plataformas), logoUrl: "" }
+            const nueva = { ...input, nombre: input.nombre.trim(), logoUrl: input.logoUrl.trim(), id: siguienteId(base.plataformas) }
             base.plataformas.push(nueva)
             return nueva
         })

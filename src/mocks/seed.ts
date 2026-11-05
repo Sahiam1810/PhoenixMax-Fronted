@@ -8,7 +8,7 @@ const plataformas: Array<[string, string, string, Categoria, number]> = [
     ["Max", "Series de HBO, películas de Warner y más.", "#5822b4", "streaming", 5],
     ["ChatGPT Plus", "Asistente de IA con acceso a los modelos más recientes.", "#10a37f", "ia", 2],
     ["Canva Pro", "Diseño gráfico con plantillas y recursos premium.", "#00c4cc", "edicion", 5],
-    ["CapCut Pro", "Edición de video con efectos y exportación sin marca de agua.", "#111111", "edicion", 2]
+    ["CapCut Pro", "Edición de video con efectos y exportación sin marca de agua.", "#25c2c9", "edicion", 2]
 ]
 
 const precios: Array<[number, TipoProducto, number, number]> = [
@@ -64,7 +64,7 @@ export function semilla(): MockDb {
             id: indice + 1,
             nombre,
             descripcion,
-            logoUrl: "",
+            logoUrl: `/logos/${slug(nombre)}.svg`,
             color,
             categoria,
             maxPantallas,

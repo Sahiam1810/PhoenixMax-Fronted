@@ -28,7 +28,7 @@ function Resumen({ lineas, total }: { lineas: LineaResumen[], total: number }) {
             <ul className="divide-y divide-slate-100">
                 {lineas.map((linea) => (
                     <li key={linea.id} className="flex items-center gap-3 py-3">
-                        <LogoPlataforma plataforma={linea.producto.plataforma} className="size-12 shrink-0 rounded-lg [&>span:first-child]:text-[9px]" />
+                        <LogoPlataforma plataforma={linea.producto.plataforma} tamano="mini" className="size-12 shrink-0 rounded-lg" />
                         <div className="min-w-0 flex-1">
                             <p className="truncate text-sm font-bold">{linea.producto.plataforma.nombre}</p>
                             <p className="text-xs text-slate-500">{etiquetaTipo[linea.producto.tipo]} · {duracion(linea.producto.duracionDias)} · x{linea.cantidad}</p>

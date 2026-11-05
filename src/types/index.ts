@@ -169,6 +169,7 @@ export interface CuentasFiltro {
 export interface PlataformaInput {
     nombre: string
     descripcion: string
+    logoUrl: string
     color: string
     categoria: Categoria
     maxPantallas: number

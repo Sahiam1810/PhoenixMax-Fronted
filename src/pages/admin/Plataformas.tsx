@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from "react"
 import { EncabezadoAdmin, Panel, Tabla, Td, Th } from "../../components/admin"
-import { Aviso, Boton, Campo, Cargando, Selector } from "../../components/ui"
+import { Aviso, Boton, Campo, Cargando, IconoPlataforma, Selector } from "../../components/ui"
 import { useCarga } from "../../hooks/useCarga"
 import { etiquetaCategoria } from "../../lib/formato"
 import { adminService } from "../../services/adminService"
@@ -14,7 +14,7 @@ function esCategoria(valor: string): valor is Categoria {
     return valor === "streaming" || valor === "ia" || valor === "edicion"
 }
 
-const vacia: PlataformaInput = { nombre: "", descripcion: "", color: "#38b6ff", categoria: "streaming", maxPantallas: 4, activo: true }
+const vacia: PlataformaInput = { nombre: "", descripcion: "", logoUrl: "", color: "#ff7a1a", categoria: "streaming", maxPantallas: 4, activo: true }
 
 function FormPlataforma({ onCreada }: { onCreada: (texto: string) => void }) {
     const [form, setForm] = useState<PlataformaInput>(vacia)
@@ -47,7 +47,8 @@ function FormPlataforma({ onCreada }: { onCreada: (texto: string) => void }) {
             </Selector>
             <Campo etiqueta="Pantallas por cuenta" name="plataforma-max" type="number" min={1} max={10} value={form.maxPantallas} onChange={(evento) => setForm({ ...form, maxPantallas: Number(evento.target.value) })} />
             <Campo etiqueta="Color" name="plataforma-color" type="color" value={form.color} onChange={(evento) => setForm({ ...form, color: evento.target.value })} className="[&_input]:h-10.5 [&_input]:p-1" />
-            <Campo etiqueta="Descripción" name="plataforma-descripcion" value={form.descripcion} onChange={(evento) => setForm({ ...form, descripcion: evento.target.value })} className="sm:col-span-2 lg:col-span-3" />
+            <Campo etiqueta="Descripción" name="plataforma-descripcion" value={form.descripcion} onChange={(evento) => setForm({ ...form, descripcion: evento.target.value })} className="sm:col-span-2" />
+            <Campo etiqueta="Logo (URL o /logos/archivo.svg)" name="plataforma-logo" value={form.logoUrl} onChange={(evento) => setForm({ ...form, logoUrl: evento.target.value })} />
             <div className="flex items-end">
                 <Boton type="submit" className="w-full" cargando={guardando}>Crear plataforma</Boton>
             </div>
@@ -79,7 +80,7 @@ function FilaPlataforma({ plataforma, onCambio }: { plataforma: Plataforma, onCa
         <tr className={plataforma.activo ? "" : "text-slate-400"}>
             <Td>
                 <div className="flex items-center gap-2">
-                    <span className="size-3 rounded-full" style={{ backgroundColor: plataforma.color }} />
+                    <IconoPlataforma plataforma={plataforma} className="size-7 rounded-lg text-xs" />
                     <span className="font-medium">{plataforma.nombre}</span>
                 </div>
                 <p className="mt-0.5 max-w-xs truncate text-xs text-slate-500">{plataforma.descripcion}</p>

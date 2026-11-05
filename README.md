@@ -32,6 +32,18 @@ Tienda de cuentas y pantallas de streaming, IA y edición (reto StreamStore). Re
 El cliente semilla tiene servicios que vencen en 1 y 3 días, uno vencido y un carrito con Max cuenta completa (stock 1) para probar la validación.
 Los datos mock se guardan en `localStorage` (`phoenixmax-mock-db-v1`); bórrala para volver a la semilla.
 
+## Imágenes y logos
+
+No hay imágenes, fuentes ni íconos de terceros: la tipografía es la del sistema, los íconos y el logo del fénix son SVG propios.
+
+- `public/img/hero.jpg`: fondo de la portada. Si no existe se muestra un degradado naranja.
+- `public/img/auth.jpg`: fondo del panel de login y registro, con el mismo respaldo.
+- `public/logos/<plataforma>.svg` (`netflix.svg`, `disney.svg`, `primevideo.svg`, `max.svg`, `chatgptplus.svg`, `canvapro.svg`, `capcutpro.svg`): logos de cada servicio. Si el archivo falta se muestra un monograma con el color de la plataforma. Los logos de marcas son propiedad de cada empresa: usa solo archivos con permiso (por ejemplo, de su kit de prensa) o imágenes propias. En producción el logo llega en `logoUrl` desde la API.
+
+## Licencias
+
+Las dependencias son de código abierto con licencias permisivas: React, React Router, Vite y Tailwind (MIT) y TypeScript (Apache-2.0, solo en desarrollo). No se cargan recursos desde CDNs externos.
+
 ## Estructura
 
 ```

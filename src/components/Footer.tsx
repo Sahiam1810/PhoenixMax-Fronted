@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom"
 import { enlaceWhatsApp } from "../lib/config"
-import { Marca } from "./ui"
+import { Contenedor, Marca } from "./ui"
 
 export function Footer() {
     return (
-        <footer className="mt-16 bg-brand text-ink">
-            <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 sm:grid-cols-3 sm:px-6">
+        <footer className="mt-24 bg-brand text-ink">
+            <Contenedor className="grid gap-10 py-12 sm:grid-cols-3">
                 <div>
                     <Marca />
                     <p className="mt-3 max-w-xs text-sm">Cuentas y pantallas de streaming, IA y edición con entrega inmediata y soporte real.</p>
@@ -25,9 +25,9 @@ export function Footer() {
                         <li><a href={enlaceWhatsApp()} target="_blank" rel="noreferrer" className="hover:underline">Soporte por WhatsApp</a></li>
                     </ul>
                 </div>
-            </div>
+            </Contenedor>
             <div className="border-t border-black/10">
-                <p className="mx-auto max-w-6xl px-4 py-4 text-xs sm:px-6">© {new Date().getFullYear()} PhoenixMax · Proyecto formativo, todos los datos son ficticios.</p>
+                <Contenedor className="py-4 text-xs">© {new Date().getFullYear()} PhoenixMax · Proyecto formativo, todos los datos son ficticios.</Contenedor>
             </div>
         </footer>
     )

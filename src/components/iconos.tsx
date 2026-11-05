@@ -147,13 +147,26 @@ export function IconoWhatsApp(props: Props) {
     )
 }
 
-export function LogoAlas(props: Props) {
+export const trazosFenix = [
+    "M31 33Q23.3 16.3 8 6Q15.7 22.7 31 33Z",
+    "M31 33Q19 22 3 19Q15 30 31 33Z",
+    "M31 34Q19.2 28.5 7 32Q18.8 36.5 31 34Z",
+    "M33 33Q40.7 16.3 56 6Q48.3 22.7 33 33Z",
+    "M33 33Q45 22 61 19Q49 30 33 33Z",
+    "M33 34Q44.8 28.5 57 32Q45.2 36.5 33 34Z",
+    "M32 19C36 25 36.5 34 32 44C27.5 34 28 25 32 19Z",
+    "M34.8 16.2L38.6 17.8L34.6 19.2Z",
+    "M30.5 14.5C29 11 30 8 32 5.5C32 9 33 11 33.6 14Z",
+    "M32 42C30 48 30.5 54 32 62C33.5 54 34 48 32 42Z",
+    "M31 43C27 47 23 50 17 58C24 55 28 51 31.5 46Z",
+    "M33 43C37 47 41 50 47 58C40 55 36 51 32.5 46Z"
+]
+
+export function LogoFenix(props: Props) {
     return (
-        <svg viewBox="0 0 48 40" fill="none" stroke="currentColor" strokeWidth={3.5} strokeLinecap="round" aria-hidden="true" {...props}>
-            <path d="M4 6c10 4 22 9 36 16" />
-            <path d="M22 4c0 6 6 12 18 18" />
-            <path d="M8 22c10 0 20-1 32 0" />
-            <path d="M18 34c8 0 16-6 22-12" />
+        <svg viewBox="0 0 64 64" fill="currentColor" aria-hidden="true" {...props}>
+            {trazosFenix.map((trazo) => <path key={trazo} d={trazo} />)}
+            <circle cx="32" cy="17.5" r="3.4" />
         </svg>
     )
 }

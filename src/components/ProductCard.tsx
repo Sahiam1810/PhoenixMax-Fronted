@@ -1,16 +1,19 @@
 import { Link } from "react-router-dom"
 import { duracion, etiquetaTipo, precio } from "../lib/formato"
 import type { Producto } from "../types"
-import { Insignia, LogoPlataforma } from "./ui"
+import { IconoPlataforma, Insignia } from "./ui"
 
 export function ProductCard({ producto }: { producto: Producto }) {
     const agotado = producto.stock === 0
     return (
         <Link
             to={`/producto/${producto.id}`}
-            className={`group flex min-h-36 overflow-hidden rounded-2xl bg-slate-100 transition-colors duration-150 hover:bg-suave/60 ${agotado ? "opacity-70" : ""}`}
+            className={`group flex min-h-36 overflow-hidden rounded-2xl bg-suave/50 transition-colors duration-150 hover:bg-suave ${agotado ? "opacity-70" : ""}`}
         >
-            <LogoPlataforma plataforma={producto.plataforma} className="w-32 shrink-0 rounded-2xl sm:w-36" />
+            <div className="relative grid w-32 shrink-0 place-items-center overflow-hidden rounded-2xl bg-ink sm:w-36">
+                <IconoPlataforma plataforma={producto.plataforma} className="size-14 rounded-2xl text-2xl" />
+                <span className="absolute inset-x-0 bottom-0 h-1" style={{ backgroundColor: producto.plataforma.color }} />
+            </div>
             <div className="flex min-w-0 flex-1 flex-col justify-between gap-2 p-4">
                 <div>
                     <div className="flex flex-wrap items-center gap-2">

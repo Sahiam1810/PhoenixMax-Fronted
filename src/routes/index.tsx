@@ -1,6 +1,6 @@
 import { Navigate, Route, Routes } from "react-router-dom"
 import { AdminLayout } from "../components/admin"
-import { Layout } from "../components/Layout"
+import { Layout, LayoutContenido } from "../components/Layout"
 import { ProtectedRoute } from "../components/ProtectedRoute"
 import { Carrito } from "../pages/Carrito"
 import { Catalogo } from "../pages/Catalogo"
@@ -25,27 +25,29 @@ export function AppRouter() {
             <Route path="registro" element={<Registro />} />
             <Route element={<Layout />}>
                 <Route index element={<Landing />} />
-                <Route path="catalogo" element={<Catalogo />} />
-                <Route path="producto/:id" element={<DetalleProducto />} />
-                <Route element={<ProtectedRoute />}>
-                    <Route path="perfil" element={<Perfil />} />
-                    <Route path="mi-cuenta" element={<Navigate to="/perfil" replace />} />
-                </Route>
-                <Route element={<ProtectedRoute rol="cliente" />}>
-                    <Route path="carrito" element={<Carrito />} />
-                    <Route path="checkout" element={<Checkout />} />
-                </Route>
-                <Route element={<ProtectedRoute rol="admin" />}>
-                    <Route path="admin" element={<AdminLayout />}>
-                        <Route index element={<Resumen />} />
-                        <Route path="inventario" element={<Inventario />} />
-                        <Route path="usuarios" element={<Usuarios />} />
-                        <Route path="productos" element={<Productos />} />
-                        <Route path="plataformas" element={<Plataformas />} />
-                        <Route path="ventas" element={<Ventas />} />
+                <Route element={<LayoutContenido />}>
+                    <Route path="catalogo" element={<Catalogo />} />
+                    <Route path="producto/:id" element={<DetalleProducto />} />
+                    <Route element={<ProtectedRoute />}>
+                        <Route path="perfil" element={<Perfil />} />
+                        <Route path="mi-cuenta" element={<Navigate to="/perfil" replace />} />
                     </Route>
+                    <Route element={<ProtectedRoute rol="cliente" />}>
+                        <Route path="carrito" element={<Carrito />} />
+                        <Route path="checkout" element={<Checkout />} />
+                    </Route>
+                    <Route element={<ProtectedRoute rol="admin" />}>
+                        <Route path="admin" element={<AdminLayout />}>
+                            <Route index element={<Resumen />} />
+                            <Route path="inventario" element={<Inventario />} />
+                            <Route path="usuarios" element={<Usuarios />} />
+                            <Route path="productos" element={<Productos />} />
+                            <Route path="plataformas" element={<Plataformas />} />
+                            <Route path="ventas" element={<Ventas />} />
+                        </Route>
+                    </Route>
+                    <Route path="*" element={<NoEncontrado />} />
                 </Route>
-                <Route path="*" element={<NoEncontrado />} />
             </Route>
         </Routes>
     )

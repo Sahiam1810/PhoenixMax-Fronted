@@ -50,7 +50,7 @@ export function Carrito() {
                 <div className="grid gap-6 rounded-3xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6 lg:grid-cols-[1fr_22rem]">
                     <section>
                         <h1 className="flex items-center gap-2 text-xl font-extrabold sm:text-2xl">
-                            <IconoBolsa className="size-6 text-brand-600" />
+                            <IconoBolsa className="size-6 text-brand-700" />
                             Resumen de compra
                         </h1>
                         <ul className="mt-4 divide-y divide-slate-100">
@@ -59,13 +59,13 @@ export function Carrito() {
                                 return (
                                     <li key={item.id} className="py-4">
                                         <div className="flex gap-3">
-                                            <LogoPlataforma plataforma={item.producto.plataforma} className="size-16 shrink-0 rounded-xl [&>span:first-child]:text-[10px]" />
+                                            <LogoPlataforma plataforma={item.producto.plataforma} tamano="mini" className="size-16 shrink-0 rounded-xl" />
                                             <div className="min-w-0 flex-1">
                                                 <div className="flex items-start justify-between gap-2">
                                                     <div className="min-w-0">
                                                         <Link to={`/producto/${item.producto.id}`} className="block truncate text-sm font-bold uppercase hover:underline">{item.producto.plataforma.nombre}</Link>
                                                         <p className="text-xs text-slate-500">{etiquetaTipo[item.producto.tipo]} · {duracion(item.producto.duracionDias)}</p>
-                                                        <p className="text-sm font-semibold text-brand-600">{precio(item.producto.precio)}</p>
+                                                        <p className="text-sm font-semibold text-brand-700">{precio(item.producto.precio)}</p>
                                                     </div>
                                                     <button type="button" aria-label={`Quitar ${item.producto.plataforma.nombre}`} onClick={() => ejecutar(item.id, () => eliminar(item.id))} disabled={ocupado !== null} className="rounded-lg p-2 text-slate-400 transition-colors hover:bg-red-50 hover:text-red-600 disabled:opacity-40">
                                                         <IconoBasura className="size-4" />
@@ -105,7 +105,7 @@ export function Carrito() {
                         <div className="rounded-2xl bg-slate-50 p-5">
                             <div className="flex items-center justify-between gap-3">
                                 <p className="font-semibold text-slate-700">Total del pedido</p>
-                                <p className="text-2xl font-extrabold text-brand-600">{precio(carrito.total)}</p>
+                                <p className="text-2xl font-extrabold text-brand-700">{precio(carrito.total)}</p>
                             </div>
                             <p className="mt-1 text-xs text-slate-500">{contador} {contador === 1 ? "producto" : "productos"} · Precios en COP</p>
                         </div>

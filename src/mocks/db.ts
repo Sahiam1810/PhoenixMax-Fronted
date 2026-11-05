@@ -81,7 +81,7 @@ export interface MockDb {
     notificaciones: NotificacionDb[]
 }
 
-const CLAVE = "phoenixmax-mock-db-v1"
+const CLAVE = "phoenixmax-mock-db-v2"
 const DIA = 86400000
 
 let estado: MockDb | null = null
