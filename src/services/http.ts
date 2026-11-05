@@ -1,4 +1,4 @@
-import type { ApiErrorBody, ApiResponse } from "../types"
+import type { ApiErrorBody, ApiResponse, Paginado } from "../types"
 import { revisarModo } from "./modo"
 
 const baseUrl = import.meta.env.VITE_API_URL ?? "http://localhost:3000/api"
@@ -74,6 +74,22 @@ export function query(params: Record<string, string | number | boolean | undefin
     })
     const texto = search.toString()
     return texto ? `?${texto}` : ""
+}
+
+const LIMITE_PAGINA = 50
+
+export async function todas<T>(path: string, params: Record<string, string | number | boolean | undefined> = {}): Promise<ApiResponse<T[]>> {
+    const datos: T[] = []
+    let pagina: number | null = 1
+    let message = ""
+    while (pagina !== null) {
+        const respuesta: ApiResponse<T[] | Paginado<T>> = await request<T[] | Paginado<T>>(`${path}${query({ ...params, page: pagina, limit: LIMITE_PAGINA })}`)
+        message = respuesta.message
+        if (Array.isArray(respuesta.data)) return { message, data: respuesta.data }
+        datos.push(...respuesta.data.data)
+        pagina = respuesta.data.nextPage
+    }
+    return { message, data: datos }
 }
 
 export function mensajeError(error: unknown) {

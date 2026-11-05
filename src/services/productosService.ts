@@ -1,8 +1,8 @@
-import type { ApiResponse, Paginado, Producto, ProductosFiltro } from "../types"
+import type { ApiResponse, Producto, ProductosFiltro } from "../types"
 import { productosMock } from "../mocks/servicios/productosMock"
-import { aProducto, lista, type ProductoDto } from "./api/adaptadores"
+import { aProducto, type ProductoDto } from "./api/adaptadores"
 import { plataformasConocidas } from "./api/plataformasConocidas"
-import { query, request } from "./http"
+import { request, todas } from "./http"
 import { elegir } from "./modo"
 
 export interface ProductosService {
@@ -13,10 +13,10 @@ export interface ProductosService {
 const productosApi: ProductosService = {
     listar: async (filtro = {}) => {
         const [respuesta, plataformas] = await Promise.all([
-            request<ProductoDto[] | Paginado<ProductoDto>>(`/productos${query({ plataforma: filtro.plataforma, tipo: filtro.tipo, limit: 100 })}`),
+            todas<ProductoDto>("/productos", { plataforma: filtro.plataforma, tipo: filtro.tipo }),
             plataformasConocidas()
         ])
-        const productos = lista(respuesta.data)
+        const productos = respuesta.data
             .map((item) => aProducto(item, plataformas))
             .filter((item) => !filtro.categoria || item.plataforma.categoria === filtro.categoria)
         return { message: respuesta.message, data: productos }

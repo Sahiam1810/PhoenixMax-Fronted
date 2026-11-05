@@ -1,8 +1,8 @@
-import type { ApiResponse, Compra, ComprasFiltro, Cuenta, CuentaInput, CuentasFiltro, Paginado, Plataforma, PlataformaInput, Producto, ProductoInput, Resumen, Usuario, UsuarioInput, UsuariosFiltro } from "../types"
+import type { ApiResponse, Compra, ComprasFiltro, Cuenta, CuentaInput, CuentasFiltro, Plataforma, PlataformaInput, Producto, ProductoInput, Resumen, Usuario, UsuarioInput, UsuariosFiltro } from "../types"
 import { adminMock } from "../mocks/servicios/adminMock"
-import { aCompra, aCuenta, aPlataforma, aProducto, aUsuario, dinero, lista, type CompraDto, type CuentaDto, type Dinero, type PlataformaDto, type ProductoDto, type UsuarioDto } from "./api/adaptadores"
+import { aCompra, aCuenta, aPlataforma, aProducto, aUsuario, dinero, type CompraDto, type CuentaDto, type Dinero, type PlataformaDto, type ProductoDto, type UsuarioDto } from "./api/adaptadores"
 import { olvidarPlataformas } from "./api/plataformasConocidas"
-import { cuerpo, query, request } from "./http"
+import { cuerpo, request, todas } from "./http"
 import { elegir } from "./modo"
 
 export interface ResultadoCron {
@@ -42,11 +42,9 @@ interface CronDto {
     serviciosVencidos?: number
 }
 
-type Listado<T> = T[] | Paginado<T>
-
 async function plataformasAdmin(): Promise<Plataforma[]> {
-    const respuesta = await request<Listado<PlataformaDto>>("/admin/plataformas?limit=100")
-    return lista(respuesta.data).map((item) => aPlataforma(item))
+    const respuesta = await todas<PlataformaDto>("/admin/plataformas")
+    return respuesta.data.map((item) => aPlataforma(item))
 }
 
 async function conPlataformas<T, R>(peticion: Promise<ApiResponse<T>>, convertir: (data: T, plataformas: Plataforma[]) => R): Promise<ApiResponse<R>> {
@@ -61,8 +59,8 @@ function soloEstado<T extends { activo: boolean }>(input: Partial<T>) {
 
 const adminApi: AdminService = {
     cuentas: (filtro = {}) => conPlataformas(
-        request<Listado<CuentaDto>>(`/admin/cuentas${query({ plataformaId: filtro.plataforma, estado: filtro.estado, page: 1, limit: 500 })}`),
-        (data, plataformas) => lista(data).map((item) => aCuenta(item, plataformas))
+        todas<CuentaDto>("/admin/cuentas", { plataformaId: filtro.plataforma, estado: filtro.estado }),
+        (data, plataformas) => data.map((item) => aCuenta(item, plataformas))
     ),
     crearCuenta: (input) => conPlataformas(
         request<CuentaDto>("/admin/cuentas", { method: "POST", ...cuerpo(input) }),
@@ -86,8 +84,8 @@ const adminApi: AdminService = {
         return { message: respuesta.message, data: aPlataforma(respuesta.data) }
     },
     productos: () => conPlataformas(
-        request<Listado<ProductoDto>>("/admin/productos?page=1&limit=200"),
-        (data, plataformas) => lista(data).map((item) => aProducto(item, plataformas))
+        todas<ProductoDto>("/admin/productos"),
+        (data, plataformas) => data.map((item) => aProducto(item, plataformas))
     ),
     crearProducto: (input) => conPlataformas(
         request<ProductoDto>("/admin/productos", { method: "POST", ...cuerpo(input) }),
@@ -100,8 +98,8 @@ const adminApi: AdminService = {
         aProducto
     ),
     compras: (filtro = {}) => conPlataformas(
-        request<Listado<CompraDto>>(`/admin/compras${query({ estado: filtro.estado, desde: filtro.desde, hasta: filtro.hasta, page: 1, limit: 200 })}`),
-        (data, plataformas) => lista(data).map((item) => aCompra(item, plataformas))
+        todas<CompraDto>("/admin/compras", { estado: filtro.estado, desde: filtro.desde, hasta: filtro.hasta }),
+        (data, plataformas) => data.map((item) => aCompra(item, plataformas))
     ),
     resumen: () => conPlataformas(
         request<ResumenDto>("/admin/resumen"),
@@ -119,8 +117,8 @@ const adminApi: AdminService = {
         })
     ),
     usuarios: async (filtro = {}) => {
-        const respuesta = await request<Listado<UsuarioDto>>(`/admin/usuarios${query({ rol: filtro.rol, activo: filtro.activo, q: filtro.busqueda, page: 1, limit: 200 })}`)
-        return { message: respuesta.message, data: lista(respuesta.data).map(aUsuario) }
+        const respuesta = await todas<UsuarioDto>("/admin/usuarios", { rol: filtro.rol, activo: filtro.activo, q: filtro.busqueda })
+        return { message: respuesta.message, data: respuesta.data.map(aUsuario) }
     },
     crearUsuario: async (input) => {
         const respuesta = await request<UsuarioDto>("/admin/usuarios", { method: "POST", ...cuerpo(input) })
