@@ -1,33 +1,76 @@
-import { createContext, useContext, useMemo, useState, type ReactNode } from "react"
-import { setHttpToken } from "../services/http"
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react"
+import { authService } from "../services/authService"
+import { registrarLectorToken } from "../services/http"
 import type { Usuario } from "../types"
+
+interface Sesion {
+    usuario: Usuario
+    token: string
+}
 
 interface AuthContextValue {
     usuario: Usuario | null
     token: string | null
-    login: (usuario: Usuario, token: string) => void
-    logout: () => void
+    verificando: boolean
+    iniciarSesion: (usuario: Usuario, token: string) => void
+    actualizarUsuario: (usuario: Usuario) => void
+    cerrarSesion: () => void
+}
+
+const CLAVE_SESION = "phoenixmax-sesion"
+
+function leerSesion(): Sesion | null {
+    try {
+        const texto = localStorage.getItem(CLAVE_SESION)
+        return texto ? JSON.parse(texto) as Sesion : null
+    } catch {
+        return null
+    }
+}
+
+function escribirSesion(sesion: Sesion | null) {
+    try {
+        if (sesion) localStorage.setItem(CLAVE_SESION, JSON.stringify(sesion))
+        else localStorage.removeItem(CLAVE_SESION)
+    } catch {
+        return
+    }
 }
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined)
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-    const [usuario, setUsuario] = useState<Usuario | null>(null)
-    const [token, setToken] = useState<string | null>(null)
-    const value = useMemo(() => ({
-        usuario,
-        token,
-        login: (nextUsuario: Usuario, nextToken: string) => {
-            setUsuario(nextUsuario)
-            setToken(nextToken)
-            setHttpToken(nextToken)
+    const [sesion, setSesion] = useState<Sesion | null>(leerSesion)
+    const [verificando, setVerificando] = useState(sesion !== null)
+    const tokenRef = useRef<string | null>(sesion?.token ?? null)
+    useState(() => registrarLectorToken(() => tokenRef.current))
+
+    const guardar = useCallback((nueva: Sesion | null) => {
+        tokenRef.current = nueva?.token ?? null
+        escribirSesion(nueva)
+        setSesion(nueva)
+    }, [])
+
+    useEffect(() => {
+        if (!tokenRef.current) return
+        const token = tokenRef.current
+        authService.me()
+            .then((respuesta) => guardar({ usuario: respuesta.data, token }))
+            .catch(() => guardar(null))
+            .finally(() => setVerificando(false))
+    }, [guardar])
+
+    const value = useMemo<AuthContextValue>(() => ({
+        usuario: sesion?.usuario ?? null,
+        token: sesion?.token ?? null,
+        verificando,
+        iniciarSesion: (usuario, token) => guardar({ usuario, token }),
+        actualizarUsuario: (usuario) => {
+            if (tokenRef.current) guardar({ usuario, token: tokenRef.current })
         },
-        logout: () => {
-            setUsuario(null)
-            setToken(null)
-            setHttpToken(null)
-        }
-    }), [token, usuario])
+        cerrarSesion: () => guardar(null)
+    }), [guardar, sesion, verificando])
+
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
 

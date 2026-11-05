@@ -1,4 +1,31 @@
+import { Link } from "react-router-dom"
+import { duracion, etiquetaTipo, precio } from "../lib/formato"
 import type { Producto } from "../types"
+import { Insignia, LogoPlataforma } from "./ui"
+
 export function ProductCard({ producto }: { producto: Producto }) {
-    return <article className="rounded-xl border bg-white p-4 shadow-sm"><p className="font-semibold">{producto.plataforma}</p><p>{producto.modalidad} · {producto.duracion}</p><p className="mt-2 font-bold">${producto.precio}</p><p>Stock: {producto.stock}</p>{producto.stock === 0 && <span className="mt-2 inline-block rounded bg-red-100 px-2 py-1 text-sm text-red-700">Agotado</span>}</article>
+    const agotado = producto.stock === 0
+    return (
+        <Link
+            to={`/producto/${producto.id}`}
+            className={`group flex min-h-36 overflow-hidden rounded-2xl bg-slate-100 transition-colors duration-150 hover:bg-suave/60 ${agotado ? "opacity-70" : ""}`}
+        >
+            <LogoPlataforma plataforma={producto.plataforma} className="w-32 shrink-0 rounded-2xl sm:w-36" />
+            <div className="flex min-w-0 flex-1 flex-col justify-between gap-2 p-4">
+                <div>
+                    <div className="flex flex-wrap items-center gap-2">
+                        <p className="truncate font-bold">{producto.plataforma.nombre}</p>
+                        {agotado && <Insignia className="bg-red-100 text-red-700">Agotado</Insignia>}
+                    </div>
+                    <p className="text-sm text-slate-600">{etiquetaTipo[producto.tipo]} · {duracion(producto.duracionDias)}</p>
+                </div>
+                <div className="flex items-end justify-between gap-2">
+                    <p className="text-lg font-extrabold">{precio(producto.precio)}</p>
+                    <p className={`text-xs font-semibold ${agotado ? "text-red-600" : producto.stock <= 2 ? "text-amber-700" : "text-slate-500"}`}>
+                        {agotado ? "Sin stock" : `Stock: ${producto.stock}`}
+                    </p>
+                </div>
+            </div>
+        </Link>
+    )
 }

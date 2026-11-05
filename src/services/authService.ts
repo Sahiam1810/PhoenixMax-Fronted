@@ -1,12 +1,19 @@
-import type { ApiResponse, LoginInput, RegisterInput, Usuario } from "../types"
-import { request } from "./http"
+import type { ApiResponse, AuthResult, LoginInput, PerfilInput, RegisterInput, Usuario } from "../types"
+import { authMock } from "../mocks/servicios/authMock"
+import { cuerpo, request, usarMocks } from "./http"
 
-export interface AuthResult {
-    usuario: Usuario
-    token: string
+export interface AuthService {
+    register: (input: RegisterInput) => Promise<ApiResponse<AuthResult>>
+    login: (input: LoginInput) => Promise<ApiResponse<AuthResult>>
+    me: () => Promise<ApiResponse<Usuario>>
+    actualizarPerfil: (input: PerfilInput) => Promise<ApiResponse<Usuario>>
 }
-export const authService = {
-    register: (input: RegisterInput): Promise<ApiResponse<AuthResult>> => request("/auth/register", { method: "POST", body: JSON.stringify(input) }),
-    login: (input: LoginInput): Promise<ApiResponse<AuthResult>> => request("/auth/login", { method: "POST", body: JSON.stringify(input) }),
-    me: (): Promise<ApiResponse<Usuario>> => request("/auth/me")
+
+const authApi: AuthService = {
+    register: (input) => request("/auth/register", { method: "POST", ...cuerpo(input) }),
+    login: (input) => request("/auth/login", { method: "POST", ...cuerpo(input) }),
+    me: () => request("/auth/me"),
+    actualizarPerfil: (input) => request("/auth/me", { method: "PATCH", ...cuerpo(input) })
 }
+
+export const authService: AuthService = usarMocks ? authMock : authApi

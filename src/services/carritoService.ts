@@ -1,13 +1,35 @@
-import type { ApiResponse, CarritoItem } from "../types"
-import { request } from "./http"
-export interface CarritoInput {
-    productoId: string
-    cantidad: number
+import type { ApiResponse, Carrito } from "../types"
+import { carritoMock } from "../mocks/servicios/carritoMock"
+import { cuerpo, request, usarMocks } from "./http"
+
+export interface CarritoService {
+    obtener: () => Promise<ApiResponse<Carrito>>
+    agregar: (productoId: number, cantidad: number) => Promise<ApiResponse<Carrito>>
+    actualizar: (itemId: number, cantidad: number) => Promise<ApiResponse<Carrito>>
+    eliminar: (itemId: number) => Promise<ApiResponse<Carrito>>
+    vaciar: () => Promise<ApiResponse<Carrito>>
 }
-export const carritoService = {
-    obtener: (): Promise<ApiResponse<CarritoItem[]>> => request("/carrito"),
-    agregar: (input: CarritoInput): Promise<ApiResponse<CarritoItem>> => request("/carrito", { method: "POST", body: JSON.stringify(input) }),
-    actualizar: (itemId: string, input: Partial<CarritoInput>): Promise<ApiResponse<CarritoItem>> => request(`/carrito/${itemId}`, { method: "PATCH", body: JSON.stringify(input) }),
-    eliminar: (itemId: string): Promise<ApiResponse<null>> => request(`/carrito/${itemId}`, { method: "DELETE" }),
-    vaciar: (): Promise<ApiResponse<null>> => request("/carrito", { method: "DELETE" })
+
+const obtener = () => request<Carrito>("/carrito")
+
+const carritoApi: CarritoService = {
+    obtener,
+    agregar: async (productoId, cantidad) => {
+        await request("/carrito", { method: "POST", ...cuerpo({ producto_id: productoId, cantidad }) })
+        return obtener()
+    },
+    actualizar: async (itemId, cantidad) => {
+        await request(`/carrito/${itemId}`, { method: "PATCH", ...cuerpo({ cantidad }) })
+        return obtener()
+    },
+    eliminar: async (itemId) => {
+        await request(`/carrito/${itemId}`, { method: "DELETE" })
+        return obtener()
+    },
+    vaciar: async () => {
+        await request("/carrito", { method: "DELETE" })
+        return obtener()
+    }
 }
+
+export const carritoService: CarritoService = usarMocks ? carritoMock : carritoApi
