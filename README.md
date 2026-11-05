@@ -30,7 +30,7 @@ Tienda de cuentas y pantallas de streaming, IA y edición (reto StreamStore). Re
 | Cliente | andres@phoenixmax.test | Cliente123 |
 
 El cliente semilla tiene servicios que vencen en 1 y 3 días, uno vencido y un carrito con Max cuenta completa (stock 1) para probar la validación.
-Los datos mock se guardan en `localStorage` (`phoenixmax-mock-db-v1`); bórrala para volver a la semilla.
+Los datos mock se guardan en `localStorage` (`phoenixmax-mock-db-v2`); bórrala para volver a la semilla.
 
 ## Imágenes y logos
 
