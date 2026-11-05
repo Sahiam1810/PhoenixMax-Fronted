@@ -36,6 +36,7 @@ export function ServiceCard({ servicio }: { servicio: Servicio }) {
     const [copiado, setCopiado] = useState(false)
     const estado = estadoServicio(servicio)
     const dias = diasHasta(servicio.fechaVencimiento)
+    const conCredenciales = servicio.emailAcceso !== null && servicio.passwordAcceso !== null
 
     const copiar = async () => {
         const lineas = [
@@ -65,8 +66,11 @@ export function ServiceCard({ servicio }: { servicio: Servicio }) {
                     </div>
                     <Insignia className={colores[estado]}>{etiquetaEstadoServicio[estado]}</Insignia>
                 </div>
-                <dl className="grid grid-cols-1 gap-3 rounded-xl bg-slate-50 p-3 sm:grid-cols-2">
-                    <Dato etiqueta="Correo" valor={servicio.emailAcceso} />
+                {!conCredenciales && (
+                    <p className="rounded-xl bg-slate-50 p-3 text-sm text-slate-500">Este servicio venció, por eso sus credenciales ya no están disponibles.</p>
+                )}
+                {conCredenciales && <dl className="grid grid-cols-1 gap-3 rounded-xl bg-slate-50 p-3 sm:grid-cols-2">
+                    <Dato etiqueta="Correo" valor={servicio.emailAcceso ?? ""} />
                     <div className="min-w-0">
                         <dt className="text-xs text-slate-500">Contraseña</dt>
                         <dd className="flex items-center gap-2">
@@ -78,17 +82,17 @@ export function ServiceCard({ servicio }: { servicio: Servicio }) {
                     </div>
                     {servicio.nombrePerfil && <Dato etiqueta="Perfil" valor={servicio.nombrePerfil} />}
                     {servicio.pin && <Dato etiqueta="PIN" valor={servicio.pin} />}
-                </dl>
+                </dl>}
                 <div className="flex flex-wrap items-end justify-between gap-3 text-sm">
                     <div className="space-y-0.5 text-slate-600">
                         <p>Compra: {formatoFecha(servicio.fechaInicio)}</p>
                         <p>Vence: <span className="font-semibold text-ink">{formatoFecha(servicio.fechaVencimiento)}</span></p>
                         <p className={`font-semibold ${estado === "activo" ? "text-emerald-700" : estado === "por_vencer" ? "text-amber-700" : "text-red-600"}`}>{textoDias(dias)}</p>
                     </div>
-                    <button type="button" onClick={copiar} className="inline-flex items-center gap-2 rounded-lg border border-slate-300 px-3 py-2 font-semibold transition-colors hover:bg-slate-50">
+                    {conCredenciales && <button type="button" onClick={copiar} className="inline-flex items-center gap-2 rounded-lg border border-slate-300 px-3 py-2 font-semibold transition-colors hover:bg-slate-50">
                         {copiado ? <IconoCheck className="size-4 text-emerald-600" /> : <IconoCopiar className="size-4" />}
                         {copiado ? "Copiado" : "Copiar credenciales"}
-                    </button>
+                    </button>}
                 </div>
             </div>
         </article>

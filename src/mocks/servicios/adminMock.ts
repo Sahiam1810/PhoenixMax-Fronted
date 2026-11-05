@@ -218,7 +218,7 @@ export const adminMock: AdminService = {
                     vencidos += 1
                 }
             })
-            return { enviados, vencidos }
+            return { enviados, vencidos, errores: 0 }
         })
         return ok(resultado, `Revisión completada: ${resultado.enviados} correos enviados`)
     }

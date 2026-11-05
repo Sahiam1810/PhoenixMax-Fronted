@@ -23,7 +23,10 @@ export function Resumen() {
         setMensaje(null)
         try {
             const respuesta = await adminService.ejecutarCron()
-            setMensaje({ tipo: "exito", texto: `${respuesta.message}. Servicios marcados como vencidos: ${respuesta.data.vencidos}.` })
+            const { enviados, vencidos, errores } = respuesta.data
+            const detalle = `Correos enviados: ${enviados}. Servicios marcados como vencidos: ${vencidos}.`
+            const fallidos = errores > 0 ? ` ${errores} correos no se pudieron enviar, revisa la configuración de correo del servidor.` : ""
+            setMensaje({ tipo: errores > 0 ? "error" : "exito", texto: `${respuesta.message}. ${detalle}${fallidos}` })
         } catch (fallo) {
             setMensaje({ tipo: "error", texto: mensajeError(fallo) })
         } finally {

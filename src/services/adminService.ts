@@ -8,6 +8,7 @@ import { elegir } from "./modo"
 export interface ResultadoCron {
     enviados: number
     vencidos: number
+    errores: number
 }
 
 export interface AdminService {
@@ -40,6 +41,7 @@ interface ResumenDto {
 interface CronDto {
     notificacionesEnviadas?: number
     serviciosVencidos?: number
+    errores?: number
 }
 
 async function plataformasAdmin(): Promise<Plataforma[]> {
@@ -133,7 +135,7 @@ const adminApi: AdminService = {
     },
     ejecutarCron: async () => {
         const respuesta = await request<CronDto>("/admin/cron/ejecutar", { method: "POST" })
-        return { message: respuesta.message, data: { enviados: respuesta.data.notificacionesEnviadas ?? 0, vencidos: respuesta.data.serviciosVencidos ?? 0 } }
+        return { message: respuesta.message, data: { enviados: respuesta.data.notificacionesEnviadas ?? 0, vencidos: respuesta.data.serviciosVencidos ?? 0, errores: respuesta.data.errores ?? 0 } }
     }
 }
 

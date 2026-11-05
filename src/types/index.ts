@@ -76,8 +76,8 @@ export interface Servicio {
     compraId: number
     plataforma: Plataforma
     tipo: TipoProducto
-    emailAcceso: string
-    passwordAcceso: string
+    emailAcceso: string | null
+    passwordAcceso: string | null
     nombrePerfil: string | null
     pin: string | null
     fechaInicio: string
