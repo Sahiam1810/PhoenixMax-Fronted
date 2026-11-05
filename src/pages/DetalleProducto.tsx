@@ -65,6 +65,12 @@ export function DetalleProducto() {
     const disponible = Math.max(0, producto.stock - enCarrito)
     const agotado = producto.stock === 0
     const otras = (variantes.data ?? []).filter((item) => plataformaId !== undefined && item.plataformaId === plataformaId)
+    const pantallas = producto.plataforma.maxPantallas
+    const pantallaPar = otras.find((item) => item.tipo === "pantalla" && item.duracionDias === producto.duracionDias)
+    const cuentaPar = otras.find((item) => item.tipo === "cuenta" && item.duracionDias === producto.duracionDias)
+    const precioPantallas = producto.tipo === "cuenta" && pantallaPar ? pantallaPar.precio * pantallas : producto.precio * pantallas
+    const precioCuenta = producto.tipo === "cuenta" ? producto.precio : cuentaPar?.precio
+    const ahorro = precioCuenta !== undefined ? precioPantallas - precioCuenta : 0
 
     const alAgregar = async () => {
         if (!usuario) {
@@ -105,6 +111,13 @@ export function DetalleProducto() {
                         <h1 className="mt-3 text-2xl font-extrabold sm:text-3xl">{producto.plataforma.nombre}</h1>
                         <p className="text-slate-600">{etiquetaTipo[producto.tipo]} · {duracion(producto.duracionDias)}</p>
                         <p className="mt-4 text-3xl font-extrabold">{precio(producto.precio)}</p>
+                        {ahorro > 0 && precioCuenta !== undefined && (
+                            <p className="mt-2 rounded-lg bg-brand-50 px-3 py-2 text-sm text-brand-700">
+                                {producto.tipo === "cuenta"
+                                    ? <>Equivale a {pantallas} pantallas ({precio(precioPantallas)}). <strong>Ahorras {precio(ahorro)}.</strong></>
+                                    : <>¿Necesitas las {pantallas} pantallas? La cuenta completa cuesta {precio(precioCuenta)} y <strong>ahorras {precio(ahorro)}</strong>.</>}
+                            </p>
+                        )}
                     </div>
 
                     {otras.length > 1 && (

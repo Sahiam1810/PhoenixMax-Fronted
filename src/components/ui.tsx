@@ -1,6 +1,6 @@
 import { useState, type ButtonHTMLAttributes, type InputHTMLAttributes, type ReactNode, type SelectHTMLAttributes } from "react"
 import type { Plataforma } from "../types"
-import { IconoMas, IconoMenos, LogoFenix } from "./iconos"
+import { IconoMas, IconoMenos, LogoAlas } from "./iconos"
 
 type VarianteBoton = "primario" | "marca" | "secundario" | "peligro" | "fantasma"
 
@@ -104,22 +104,17 @@ export function Insignia({ children, className = "bg-slate-100 text-slate-700" }
 
 export function TituloSeccion({ children, id }: { children: ReactNode, id?: string }) {
     return (
-        <div className="mb-6 flex items-center gap-4" id={id}>
-            <h2 className="shrink-0 text-sm font-bold uppercase tracking-wide text-ink">{children}</h2>
-            <div className="relative h-0.5 flex-1 bg-ink">
-                <span className="absolute -top-1 left-0 size-2.5 rounded-full bg-ink" />
-                <span className="absolute -top-1 right-0 size-2.5 rounded-full bg-ink" />
-            </div>
+        <div className="mb-8" id={id}>
+            <h2 className="text-2xl font-bold tracking-tight text-ink sm:text-3xl">{children}</h2>
+            <span className="mt-3 block h-1 w-12 rounded-full bg-brand" />
         </div>
     )
 }
 
 export function Marca({ grande = false, clara = false }: { grande?: boolean, clara?: boolean }) {
     return (
-        <span className={`inline-flex items-center font-extrabold tracking-tight ${clara ? "text-white" : "text-ink"} ${grande ? "gap-4 text-4xl sm:text-6xl" : "gap-2.5 text-lg"}`}>
-            <span className={`grid place-items-center bg-ink text-brand ${grande ? "size-16 rounded-2xl sm:size-20" : "size-9 rounded-xl"}`}>
-                <LogoFenix className={grande ? "size-12 sm:size-16" : "size-7"} />
-            </span>
+        <span className={`inline-flex items-center font-extrabold tracking-tight ${clara ? "text-white" : "text-ink"} ${grande ? "gap-3 text-4xl sm:text-6xl" : "gap-2 text-lg"}`}>
+            <LogoAlas className={`${clara ? "text-brand" : "text-white"} ${grande ? "h-14 w-16 sm:h-20 sm:w-24" : "h-8 w-10"}`} />
             PhoenixMax
         </span>
     )
