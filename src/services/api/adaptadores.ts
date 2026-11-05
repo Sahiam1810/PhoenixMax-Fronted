@@ -95,7 +95,7 @@ export interface UsuarioDto {
 export interface PantallaDto {
     id: number
     nombrePerfil: string
-    pin: string
+    pin?: string | null
     estado: EstadoPantalla
 }
 
@@ -273,6 +273,6 @@ export function aCuenta(dto: CuentaDto, plataformas: Plataforma[]): Cuenta {
         emailAcceso: dto.emailAcceso,
         estado: dto.estado,
         createdAt: dto.createdAt ?? "",
-        pantallas: (dto.pantallas ?? []).map((pantalla) => ({ ...pantalla, cuentaId: dto.id }))
+        pantallas: (dto.pantallas ?? []).map((pantalla) => ({ ...pantalla, pin: pantalla.pin ?? "", cuentaId: dto.id }))
     }
 }

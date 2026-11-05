@@ -2,7 +2,7 @@ import type { ApiResponse, Compra, ComprasFiltro, Cuenta, CuentaInput, CuentasFi
 import { adminMock } from "../mocks/servicios/adminMock"
 import { aCompra, aCuenta, aPlataforma, aProducto, aUsuario, dinero, type CompraDto, type CuentaDto, type Dinero, type PlataformaDto, type ProductoDto, type UsuarioDto } from "./api/adaptadores"
 import { olvidarPlataformas } from "./api/plataformasConocidas"
-import { cuerpo, request, todas } from "./http"
+import { ApiError, cuerpo, request, todas } from "./http"
 import { elegir } from "./modo"
 
 export interface ResultadoCron {
@@ -43,7 +43,10 @@ interface CronDto {
 }
 
 async function plataformasAdmin(): Promise<Plataforma[]> {
-    const respuesta = await todas<PlataformaDto>("/admin/plataformas")
+    const respuesta = await todas<PlataformaDto>("/admin/plataformas").catch((error: unknown) => {
+        if (error instanceof ApiError && error.status === 501) return todas<PlataformaDto>("/plataformas")
+        throw error
+    })
     return respuesta.data.map((item) => aPlataforma(item))
 }
 
@@ -59,7 +62,7 @@ function soloEstado<T extends { activo: boolean }>(input: Partial<T>) {
 
 const adminApi: AdminService = {
     cuentas: (filtro = {}) => conPlataformas(
-        todas<CuentaDto>("/admin/cuentas", { plataformaId: filtro.plataforma, estado: filtro.estado }),
+        todas<CuentaDto>("/admin/cuentas", { plataforma: filtro.plataforma, estado: filtro.estado }),
         (data, plataformas) => data.map((item) => aCuenta(item, plataformas))
     ),
     crearCuenta: (input) => conPlataformas(

@@ -48,8 +48,8 @@ function FormCuenta({ plataformas, onCreada }: { plataformas: Array<{ id: number
             setError("Escribe un correo de acceso válido")
             return
         }
-        if (passwordAcceso.length < 4) {
-            setError("La contraseña debe tener al menos 4 caracteres")
+        if (passwordAcceso.length < 8) {
+            setError("La contraseña debe tener al menos 8 caracteres")
             return
         }
         setGuardando(true)
@@ -191,7 +191,7 @@ export function Inventario() {
                                                 <span className="text-xs text-slate-500">{vendidas(cuenta)}/{cuenta.pantallas.length}</span>
                                             </div>
                                         </Td>
-                                        <Td className="text-xs text-slate-500">{formatoFecha(cuenta.createdAt)}</Td>
+                                        <Td className="text-xs text-slate-500">{cuenta.createdAt ? formatoFecha(cuenta.createdAt) : "—"}</Td>
                                         <Td className="whitespace-nowrap text-right">
                                             <button type="button" onClick={() => setExpandida(expandida === cuenta.id ? null : cuenta.id)} className="mr-3 text-xs font-semibold text-slate-600 hover:text-ink">
                                                 {expandida === cuenta.id ? "Ocultar" : "Pantallas"}
@@ -210,7 +210,7 @@ export function Inventario() {
                                                     {cuenta.pantallas.map((pantalla) => (
                                                         <div key={pantalla.id} className="rounded-md border border-slate-200 bg-white px-3 py-2 text-xs">
                                                             <p className="font-semibold">{pantalla.nombrePerfil}</p>
-                                                            <p className="text-slate-500">PIN {pantalla.pin}</p>
+                                                            {pantalla.pin && <p className="text-slate-500">PIN {pantalla.pin}</p>}
                                                             <p className={pantalla.estado === "vendida" ? "font-semibold text-ink" : "text-emerald-700"}>{pantalla.estado === "vendida" ? "Vendida" : "Disponible"}</p>
                                                         </div>
                                                     ))}

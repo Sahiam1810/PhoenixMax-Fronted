@@ -19,7 +19,7 @@ async function compra(path: string, options: RequestInit = {}): Promise<ApiRespo
 
 const comprasApi: ComprasService = {
     crear: () => compra("/compras", { method: "POST" }),
-    pagar: (id, metodoPago) => compra(`/compras/${id}/pagar`, { method: "POST", ...cuerpo({ metodoPago }) }),
+    pagar: (id) => compra(`/compras/${id}/pagar`, { method: "POST", ...cuerpo({ metodoPago: "simulado" }) }),
     mias: async () => {
         const [respuesta, plataformas] = await Promise.all([todas<CompraDto>("/compras/mias"), plataformasConocidas()])
         return { message: respuesta.message, data: respuesta.data.map((item) => aCompra(item, plataformas)) }
