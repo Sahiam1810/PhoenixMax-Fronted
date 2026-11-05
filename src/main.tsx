@@ -2,9 +2,13 @@ import { StrictMode } from "react"
 import { createRoot } from "react-dom/client"
 import "./index.css"
 import { App } from "./App"
+import { detectarModo, vigilarModo } from "./services/modo"
 
-createRoot(document.getElementById("root")!).render(
-    <StrictMode>
-        <App />
-    </StrictMode>
-)
+detectarModo().finally(() => {
+    createRoot(document.getElementById("root")!).render(
+        <StrictMode>
+            <App />
+        </StrictMode>
+    )
+    vigilarModo()
+})

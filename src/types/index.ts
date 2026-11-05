@@ -118,15 +118,23 @@ export interface Resumen {
 }
 
 export interface ApiResponse<T> {
-    ok: boolean
     message: string
     data: T
 }
 
 export interface ApiErrorBody {
-    ok: false
-    message: string
+    error: string
     errors?: Record<string, string[]>
+}
+
+export interface Paginado<T> {
+    previousPage: number | null
+    currentPage: number
+    nextPage: number | null
+    total: number
+    totalPages: number
+    limit: number
+    data: T[]
 }
 
 export interface LoginInput {

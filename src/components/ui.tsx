@@ -125,7 +125,7 @@ export function Marca({ grande = false, clara = false }: { grande?: boolean, cla
 }
 
 export function Contenedor({ children, className = "" }: { children: ReactNode, className?: string }) {
-    return <div className={`mx-auto w-full max-w-6xl px-6 sm:px-12 lg:px-20 ${className}`}>{children}</div>
+    return <div className={`mx-auto w-full max-w-[96rem] px-5 sm:px-10 lg:px-14 xl:px-28 ${className}`}>{children}</div>
 }
 
 export function FondoImagen({ src, className = "", children }: { src: string, className?: string, children?: ReactNode }) {

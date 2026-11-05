@@ -15,7 +15,7 @@ export function AdminLayout() {
         <div>
             <div className="mb-6 border-b border-slate-200">
                 <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Administración</p>
-                <nav className="-mx-4 mt-2 flex overflow-x-auto px-4 sm:mx-0 sm:px-0">
+                <nav className="-mx-5 mt-2 flex overflow-x-auto px-5 sm:mx-0 sm:px-0">
                     {secciones.map((seccion) => (
                         <NavLink
                             key={seccion.ruta}

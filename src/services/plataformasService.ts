@@ -1,13 +1,17 @@
 import type { ApiResponse, Plataforma } from "../types"
 import { plataformasMock } from "../mocks/servicios/plataformasMock"
-import { request, usarMocks } from "./http"
+import { plataformasConocidas } from "./api/plataformasConocidas"
+import { elegir } from "./modo"
 
 export interface PlataformasService {
     listar: () => Promise<ApiResponse<Plataforma[]>>
 }
 
 const plataformasApi: PlataformasService = {
-    listar: () => request("/plataformas")
+    listar: async () => {
+        const plataformas = await plataformasConocidas()
+        return { message: "Plataformas obtenidas", data: plataformas.filter((item) => item.activo) }
+    }
 }
 
-export const plataformasService: PlataformasService = usarMocks ? plataformasMock : plataformasApi
+export const plataformasService: PlataformasService = elegir(plataformasMock, plataformasApi)

@@ -144,7 +144,7 @@ export function diasRestantes(fechaIso: string) {
 
 export async function ok<T>(data: T, message = "OK"): Promise<ApiResponse<T>> {
     await new Promise((resolve) => setTimeout(resolve, 250))
-    return { ok: true, message, data: structuredClone(data) }
+    return { message, data: structuredClone(data) }
 }
 
 export function fallo(message: string, status = 400): never {

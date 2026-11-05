@@ -1,13 +1,17 @@
 import type { ApiErrorBody, ApiResponse } from "../types"
+import { revisarModo } from "./modo"
 
 const baseUrl = import.meta.env.VITE_API_URL ?? "http://localhost:3000/api"
 
-export const usarMocks = import.meta.env.VITE_USE_MOCKS !== "false"
-
 let leerToken: () => string | null = () => null
+let alExpirar: () => void = () => undefined
 
 export function registrarLectorToken(lector: () => string | null) {
     leerToken = lector
+}
+
+export function registrarSesionExpirada(accion: () => void) {
+    alExpirar = accion
 }
 
 export function tokenActual() {
@@ -25,18 +29,38 @@ export class ApiError extends Error {
     }
 }
 
+function esCuerpoError(valor: unknown): valor is ApiErrorBody {
+    return typeof valor === "object" && valor !== null && "error" in valor && typeof valor.error === "string"
+}
+
+function mensajePorEstado(status: number) {
+    if (status === 401) return "Tu sesión expiró, inicia sesión de nuevo"
+    if (status === 403) return "No tienes permiso para hacer esto"
+    if (status === 404) return "No encontramos lo que buscas"
+    if (status === 501) return "Esta función aún no está disponible en el servidor"
+    if (status >= 500) return "El servidor tuvo un problema, intenta de nuevo"
+    return "No se pudo completar la solicitud"
+}
+
 export async function request<T>(path: string, options: RequestInit = {}): Promise<ApiResponse<T>> {
     const headers = new Headers(options.headers)
     headers.set("Content-Type", "application/json")
     const token = leerToken()
     if (token) headers.set("Authorization", `Bearer ${token}`)
-    const response = await fetch(`${baseUrl}${path}`, { ...options, headers })
-    const payload = await response.json() as ApiResponse<T> | ApiErrorBody
-    if (!response.ok || !payload.ok) {
-        const errores = "errors" in payload ? payload.errors : undefined
-        throw new ApiError(payload.message ?? "Error de solicitud", response.status, errores ?? {})
+    let response: Response
+    try {
+        response = await fetch(`${baseUrl}${path}`, { ...options, headers })
+    } catch {
+        revisarModo()
+        throw new ApiError("No se pudo conectar con el servidor. Revisa que el backend esté encendido.", 0)
     }
-    return payload
+    const payload: unknown = await response.json().catch(() => null)
+    if (!response.ok) {
+        if (response.status === 401 && token) alExpirar()
+        if (esCuerpoError(payload) && response.status !== 501) throw new ApiError(payload.error, response.status, payload.errors ?? {})
+        throw new ApiError(mensajePorEstado(response.status), response.status)
+    }
+    return payload as ApiResponse<T>
 }
 
 export function cuerpo(data: object): RequestInit {
@@ -53,6 +77,10 @@ export function query(params: Record<string, string | number | boolean | undefin
 }
 
 export function mensajeError(error: unknown) {
+    if (error instanceof ApiError && Object.keys(error.errors).length > 0) {
+        const detalle = Object.values(error.errors).flat().join(". ")
+        return `${error.message}: ${detalle}`
+    }
     if (error instanceof Error) return error.message
     return "Ocurrió un error inesperado"
 }

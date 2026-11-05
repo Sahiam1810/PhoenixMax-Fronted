@@ -5,7 +5,8 @@ import { Aviso, Boton, Campo } from "../components/ui"
 import { useAuth } from "../context/AuthContext"
 import { esEmail, sinErrores, type Errores } from "../lib/validacion"
 import { authService } from "../services/authService"
-import { mensajeError, usarMocks } from "../services/http"
+import { mensajeError } from "../services/http"
+import { modoActual } from "../services/modo"
 import type { LoginInput } from "../types"
 
 function rutaDestino(estado: unknown) {
@@ -21,6 +22,7 @@ export function Login() {
     const [error, setError] = useState("")
     const [enviando, setEnviando] = useState(false)
     const desde = rutaDestino(location.state)
+    const usarMocks = modoActual() === "mock"
 
     if (usuario) return <Navigate to={desde ?? (usuario.rol === "admin" ? "/admin" : "/")} replace />
 
@@ -55,11 +57,11 @@ export function Login() {
                 <p className="text-center text-sm text-slate-600">
                     ¿No tienes cuenta? <Link to="/registro" state={location.state} className="font-bold text-ink underline">Regístrate</Link>
                 </p>
-                {usarMocks && (
+                {import.meta.env.DEV && (
                     <div className="rounded-lg bg-slate-50 p-3 text-xs text-slate-500">
-                        <p className="font-semibold text-slate-700">Usuarios de prueba</p>
-                        <p>Cliente: cliente@phoenixmax.test / Cliente123</p>
-                        <p>Admin: admin@phoenixmax.test / Admin123</p>
+                        <p className="font-semibold text-slate-700">Usuarios de prueba {usarMocks ? "(datos simulados)" : "(backend)"}</p>
+                        <p>Cliente: {usarMocks ? "cliente@phoenixmax.test / Cliente123" : "cliente1@streamstore.test / Cliente123*"}</p>
+                        <p>Admin: {usarMocks ? "admin@phoenixmax.test / Admin123" : "admin@streamstore.test / Admin123*"}</p>
                     </div>
                 )}
             </form>

@@ -14,8 +14,8 @@ export function Header() {
     const { contador } = useCart()
 
     return (
-        <header className="sticky top-0 z-30 px-3 pt-3 sm:px-8 lg:px-14">
-            <nav className="mx-auto flex max-w-7xl items-center justify-between gap-2 rounded-2xl bg-brand px-3 py-2.5 shadow-sm sm:px-4">
+        <header className="sticky top-0 z-30 px-3 pt-3 sm:px-8 lg:px-12 xl:px-24">
+            <nav className="mx-auto flex max-w-[96rem] items-center justify-between gap-2 rounded-2xl bg-brand px-3 py-2.5 shadow-sm sm:px-4">
                 <Link to="/" aria-label="PhoenixMax, inicio" className="shrink-0">
                     <Marca />
                 </Link>

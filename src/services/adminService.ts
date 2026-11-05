@@ -1,6 +1,9 @@
-import type { ApiResponse, Compra, ComprasFiltro, Cuenta, CuentaInput, CuentasFiltro, Plataforma, PlataformaInput, Producto, ProductoInput, Resumen, Usuario, UsuarioInput, UsuariosFiltro } from "../types"
+import type { ApiResponse, Compra, ComprasFiltro, Cuenta, CuentaInput, CuentasFiltro, Paginado, Plataforma, PlataformaInput, Producto, ProductoInput, Resumen, Usuario, UsuarioInput, UsuariosFiltro } from "../types"
 import { adminMock } from "../mocks/servicios/adminMock"
-import { cuerpo, query, request, usarMocks } from "./http"
+import { aCompra, aCuenta, aPlataforma, aProducto, aUsuario, dinero, lista, type CompraDto, type CuentaDto, type Dinero, type PlataformaDto, type ProductoDto, type UsuarioDto } from "./api/adaptadores"
+import { olvidarPlataformas } from "./api/plataformasConocidas"
+import { cuerpo, query, request } from "./http"
+import { elegir } from "./modo"
 
 export interface ResultadoCron {
     enviados: number
@@ -25,22 +28,112 @@ export interface AdminService {
     ejecutarCron: () => Promise<ApiResponse<ResultadoCron>>
 }
 
-const adminApi: AdminService = {
-    cuentas: (filtro = {}) => request(`/admin/cuentas${query({ plataforma: filtro.plataforma, estado: filtro.estado })}`),
-    crearCuenta: (input) => request("/admin/cuentas", { method: "POST", ...cuerpo(input) }),
-    cambiarEstadoCuenta: (id, activa) => request(`/admin/cuentas/${id}`, { method: "PATCH", ...cuerpo({ activa }) }),
-    plataformas: () => request("/admin/plataformas"),
-    crearPlataforma: (input) => request("/admin/plataformas", { method: "POST", ...cuerpo(input) }),
-    actualizarPlataforma: (id, input) => request(`/admin/plataformas/${id}`, { method: "PATCH", ...cuerpo(input) }),
-    productos: () => request("/admin/productos"),
-    crearProducto: (input) => request("/admin/productos", { method: "POST", ...cuerpo(input) }),
-    actualizarProducto: (id, input) => request(`/admin/productos/${id}`, { method: "PATCH", ...cuerpo(input) }),
-    compras: (filtro = {}) => request(`/admin/compras${query({ estado: filtro.estado, desde: filtro.desde, hasta: filtro.hasta })}`),
-    resumen: () => request("/admin/resumen"),
-    usuarios: (filtro = {}) => request(`/admin/usuarios${query({ rol: filtro.rol, activo: filtro.activo, q: filtro.busqueda })}`),
-    crearUsuario: (input) => request("/admin/usuarios", { method: "POST", ...cuerpo(input) }),
-    cambiarEstadoUsuario: (id, activo) => request(`/admin/usuarios/${id}`, { method: "PATCH", ...cuerpo({ activo }) }),
-    ejecutarCron: () => request("/admin/cron/ejecutar", { method: "POST" })
+interface ResumenDto {
+    ventasHoy?: Dinero
+    ventasMes?: Dinero
+    comprasHoy?: number
+    comprasMes?: number
+    clientes?: number
+    stock?: Array<{ plataforma: PlataformaDto, stockCuentas?: number, stockPantallas?: number }>
 }
 
-export const adminService: AdminService = usarMocks ? adminMock : adminApi
+interface CronDto {
+    notificacionesEnviadas?: number
+    serviciosVencidos?: number
+}
+
+type Listado<T> = T[] | Paginado<T>
+
+async function plataformasAdmin(): Promise<Plataforma[]> {
+    const respuesta = await request<Listado<PlataformaDto>>("/admin/plataformas?limit=100")
+    return lista(respuesta.data).map((item) => aPlataforma(item))
+}
+
+async function conPlataformas<T, R>(peticion: Promise<ApiResponse<T>>, convertir: (data: T, plataformas: Plataforma[]) => R): Promise<ApiResponse<R>> {
+    const [respuesta, plataformas] = await Promise.all([peticion, plataformasAdmin().catch(() => [])])
+    return { message: respuesta.message, data: convertir(respuesta.data, plataformas) }
+}
+
+function soloEstado<T extends { activo: boolean }>(input: Partial<T>) {
+    const claves = Object.keys(input)
+    return claves.length === 1 && claves[0] === "activo"
+}
+
+const adminApi: AdminService = {
+    cuentas: (filtro = {}) => conPlataformas(
+        request<Listado<CuentaDto>>(`/admin/cuentas${query({ plataformaId: filtro.plataforma, estado: filtro.estado, page: 1, limit: 500 })}`),
+        (data, plataformas) => lista(data).map((item) => aCuenta(item, plataformas))
+    ),
+    crearCuenta: (input) => conPlataformas(
+        request<CuentaDto>("/admin/cuentas", { method: "POST", ...cuerpo(input) }),
+        aCuenta
+    ),
+    cambiarEstadoCuenta: (id, activa) => conPlataformas(
+        request<CuentaDto>(`/admin/cuentas/${id}/estado`, { method: "PATCH", ...cuerpo({ estado: activa ? "disponible" : "inactiva" }) }),
+        aCuenta
+    ),
+    plataformas: async () => ({ message: "Plataformas obtenidas", data: await plataformasAdmin() }),
+    crearPlataforma: async (input) => {
+        const respuesta = await request<PlataformaDto>("/admin/plataformas", { method: "POST", ...cuerpo({ ...input, logoUrl: input.logoUrl || null }) })
+        olvidarPlataformas()
+        return { message: respuesta.message, data: aPlataforma(respuesta.data) }
+    },
+    actualizarPlataforma: async (id, input) => {
+        const respuesta = soloEstado(input)
+            ? await request<PlataformaDto>(`/admin/plataformas/${id}/estado`, { method: "PATCH", ...cuerpo(input) })
+            : await request<PlataformaDto>(`/admin/plataformas/${id}`, { method: "PATCH", ...cuerpo(input) })
+        olvidarPlataformas()
+        return { message: respuesta.message, data: aPlataforma(respuesta.data) }
+    },
+    productos: () => conPlataformas(
+        request<Listado<ProductoDto>>("/admin/productos?page=1&limit=200"),
+        (data, plataformas) => lista(data).map((item) => aProducto(item, plataformas))
+    ),
+    crearProducto: (input) => conPlataformas(
+        request<ProductoDto>("/admin/productos", { method: "POST", ...cuerpo(input) }),
+        aProducto
+    ),
+    actualizarProducto: (id, input) => conPlataformas(
+        soloEstado(input)
+            ? request<ProductoDto>(`/admin/productos/${id}/estado`, { method: "PATCH", ...cuerpo(input) })
+            : request<ProductoDto>(`/admin/productos/${id}`, { method: "PATCH", ...cuerpo(input) }),
+        aProducto
+    ),
+    compras: (filtro = {}) => conPlataformas(
+        request<Listado<CompraDto>>(`/admin/compras${query({ estado: filtro.estado, desde: filtro.desde, hasta: filtro.hasta, page: 1, limit: 200 })}`),
+        (data, plataformas) => lista(data).map((item) => aCompra(item, plataformas))
+    ),
+    resumen: () => conPlataformas(
+        request<ResumenDto>("/admin/resumen"),
+        (data, plataformas) => ({
+            ventasHoy: dinero(data.ventasHoy),
+            ventasMes: dinero(data.ventasMes),
+            comprasHoy: data.comprasHoy ?? 0,
+            comprasMes: data.comprasMes ?? 0,
+            clientes: data.clientes ?? 0,
+            stock: (data.stock ?? []).map((fila) => ({
+                plataforma: aPlataforma(fila.plataforma, plataformas),
+                stockCuentas: fila.stockCuentas ?? 0,
+                stockPantallas: fila.stockPantallas ?? 0
+            }))
+        })
+    ),
+    usuarios: async (filtro = {}) => {
+        const respuesta = await request<Listado<UsuarioDto>>(`/admin/usuarios${query({ rol: filtro.rol, activo: filtro.activo, q: filtro.busqueda, page: 1, limit: 200 })}`)
+        return { message: respuesta.message, data: lista(respuesta.data).map(aUsuario) }
+    },
+    crearUsuario: async (input) => {
+        const respuesta = await request<UsuarioDto>("/admin/usuarios", { method: "POST", ...cuerpo(input) })
+        return { message: respuesta.message, data: aUsuario(respuesta.data) }
+    },
+    cambiarEstadoUsuario: async (id, activo) => {
+        const respuesta = await request<UsuarioDto>(`/admin/usuarios/${id}/estado`, { method: "PATCH", ...cuerpo({ activo }) })
+        return { message: respuesta.message, data: aUsuario(respuesta.data) }
+    },
+    ejecutarCron: async () => {
+        const respuesta = await request<CronDto>("/admin/cron/ejecutar", { method: "POST" })
+        return { message: respuesta.message, data: { enviados: respuesta.data.notificacionesEnviadas ?? 0, vencidos: respuesta.data.serviciosVencidos ?? 0 } }
+    }
+}
+
+export const adminService: AdminService = elegir(adminMock, adminApi)

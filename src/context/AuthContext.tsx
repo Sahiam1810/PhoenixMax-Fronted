@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react"
 import { authService } from "../services/authService"
-import { registrarLectorToken } from "../services/http"
+import { ApiError, registrarLectorToken, registrarSesionExpirada } from "../services/http"
 import type { Usuario } from "../types"
 
 interface Sesion {
@@ -52,11 +52,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }, [])
 
     useEffect(() => {
+        registrarSesionExpirada(() => guardar(null))
+    }, [guardar])
+
+    useEffect(() => {
         if (!tokenRef.current) return
         const token = tokenRef.current
         authService.me()
             .then((respuesta) => guardar({ usuario: respuesta.data, token }))
-            .catch(() => guardar(null))
+            .catch((fallo: unknown) => {
+                if (fallo instanceof ApiError && (fallo.status === 401 || fallo.status === 404)) guardar(null)
+            })
             .finally(() => setVerificando(false))
     }, [guardar])
 

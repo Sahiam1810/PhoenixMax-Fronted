@@ -46,7 +46,7 @@ function MisServicios() {
     ]
     return (
         <div className="space-y-4">
-            <div className="-mx-4 flex gap-2 overflow-x-auto px-4 sm:mx-0 sm:px-0">
+            <div className="-mx-5 flex gap-2 overflow-x-auto px-5 sm:mx-0 sm:px-0">
                 {opciones.map(([valor, texto]) => (
                     <button key={valor} type="button" onClick={() => setFiltro(valor)} aria-pressed={filtro === valor} className={`shrink-0 rounded-full border px-3 py-1 text-xs font-semibold transition-colors ${filtro === valor ? "border-ink bg-ink text-white" : "border-slate-300 hover:border-ink"}`}>
                         {texto}

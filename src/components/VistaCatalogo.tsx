@@ -59,13 +59,13 @@ export function VistaCatalogo() {
     return (
         <div>
             <div className="mb-8 space-y-4">
-                <div className="-mx-6 flex gap-2 overflow-x-auto px-6 pb-1 sm:mx-0 sm:flex-wrap sm:px-0">
+                <div className="-mx-5 flex gap-2 overflow-x-auto px-5 pb-1 sm:mx-0 sm:flex-wrap sm:px-0">
                     <Chip activo={!categoria} onClick={() => cambiar("categoria")}>Todas</Chip>
                     {categorias.map((item) => (
                         <Chip key={item} activo={categoria === item} onClick={() => cambiar("categoria", item)}>{etiquetaCategoria[item]}</Chip>
                     ))}
                 </div>
-                <div className="-mx-6 flex gap-3 overflow-x-auto px-6 pb-2 sm:mx-0 sm:flex-wrap sm:px-0">
+                <div className="-mx-5 flex gap-3 overflow-x-auto px-5 pb-2 sm:mx-0 sm:flex-wrap sm:px-0">
                     {plataformasVisibles.map((item) => {
                         const activa = plataforma === item.id
                         return (

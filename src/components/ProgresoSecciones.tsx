@@ -53,10 +53,11 @@ export function ProgresoSecciones({ secciones }: { secciones: SeccionProgreso[] 
                             key={seccion.id}
                             href={`#${seccion.id}`}
                             aria-current={esActiva ? "true" : undefined}
-                            className="group relative flex items-center gap-3"
+                            aria-label={seccion.titulo}
+                            className="group relative flex items-center gap-3 outline-none"
                         >
-                            <span className={`relative size-3 rounded-full ring-2 transition-all duration-200 ${recorrida ? "bg-brand ring-brand/30" : "bg-slate-400/60 ring-transparent"} ${esActiva ? "scale-125" : "group-hover:scale-110"}`} />
-                            <span className={`whitespace-nowrap rounded-full bg-white/95 px-2.5 py-1 text-xs font-semibold text-ink shadow-sm ring-1 ring-black/5 transition-all duration-200 ${esActiva ? "translate-x-0 opacity-100" : "pointer-events-none -translate-x-1 opacity-0 group-hover:pointer-events-auto group-hover:translate-x-0 group-hover:opacity-100"}`}>
+                            <span className={`relative size-3 rounded-full ring-2 transition-all duration-200 ${recorrida ? "bg-brand ring-brand/30" : "bg-slate-400/60 ring-transparent"} ${esActiva ? "scale-150 ring-4" : "group-hover:scale-125"}`} />
+                            <span className={`whitespace-nowrap rounded-full bg-white/95 px-2.5 py-1 text-xs font-semibold text-ink shadow-sm ring-1 ring-black/5 transition-all duration-200 pointer-events-none -translate-x-1 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 group-focus-visible:translate-x-0 group-focus-visible:opacity-100`}>
                                 {seccion.titulo}
                             </span>
                         </a>
