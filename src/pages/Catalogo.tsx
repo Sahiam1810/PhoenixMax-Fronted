@@ -1,1 +1,11 @@
-export function Catalogo() { return <h1 className="text-2xl font-bold">Catálogo</h1> }
+import { TituloSeccion } from "../components/ui"
+import { VistaCatalogo } from "../components/VistaCatalogo"
+
+export function Catalogo() {
+    return (
+        <div>
+            <TituloSeccion>Catálogo</TituloSeccion>
+            <VistaCatalogo />
+        </div>
+    )
+}
