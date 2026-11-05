@@ -274,5 +274,8 @@ La contraseña de la cuenta no se devuelve en el listado del admin.
 ## 10. Puntos para decidir entre los dos (DECIDIR)
 
 1. Token: va en `Authorization: Bearer` (propuesto) o en cookie httpOnly.
+ - Se decidio dejarlo en `Authorization: Bearer`
 2. `/productos` sin paginación (propuesto, son pocos productos).
+ - Agregar paginacion, si despues se agregan mas productos se va a necesitar
 3. Tras el registro el front llama a `/auth/login` (propuesto), o el registro devuelve también el token.
+ - Si que el front llame a `/auth/login`
