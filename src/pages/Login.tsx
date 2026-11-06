@@ -57,13 +57,7 @@ export function Login() {
                 <p className="text-center text-sm text-slate-600">
                     ¿No tienes cuenta? <Link to="/registro" state={location.state} className="font-bold text-ink underline">Regístrate</Link>
                 </p>
-                {import.meta.env.DEV && (
-                    <div className="rounded-lg bg-slate-50 p-3 text-xs text-slate-500">
-                        <p className="font-semibold text-slate-700">Usuarios de prueba {usarMocks ? "(datos simulados)" : "(backend)"}</p>
-                        <p>Cliente: {usarMocks ? "cliente@phoenixmax.test / Cliente123" : "cliente1@streamstore.test / Cliente123*"}</p>
-                        <p>Admin: {usarMocks ? "admin@phoenixmax.test / Admin123" : "admin@streamstore.test / Admin123*"}</p>
-                    </div>
-                )}
+
             </form>
         </AuthLayout>
     )
