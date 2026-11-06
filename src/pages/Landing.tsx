@@ -76,19 +76,7 @@ export function CarruselLogos({ onColor }: { onColor?: (color: string) => void }
                     src={logo.src}
                     alt={logo.nombre}
                     className="max-h-24 max-w-[80%] object-contain drop-shadow-lg"
-                    onError={(e) => {
-                        const target = e.currentTarget
-                        target.style.display = "none"
-                        const fallback = target.nextElementSibling as HTMLElement | null
-                        if (fallback) fallback.style.display = "flex"
-                    }}
                 />
-                <div
-                    className="hidden h-20 w-20 items-center justify-center rounded-2xl text-2xl font-black text-white"
-                    style={{ background: logo.color }}
-                >
-                    {logo.letra}
-                </div>
                 <div
                     className="absolute bottom-3 right-4 rounded-full px-2.5 py-0.5 text-xs font-bold text-white shadow"
                     style={{ background: logo.color }}
@@ -121,55 +109,78 @@ export function Landing() {
     return (
         <div className="bg-ink text-white">
             <ProgresoSecciones secciones={secciones} />
-            <section id="inicio" className="-mt-[4.5rem]">
-                <FondoImagen src="/img/hero.jpg" className="text-white">
+
+            {/* CUADRO DE INICIO OSCURO - PANTALLA COMPLETA QUE TAPA TODO EL SCROLL */}
+            <div className="-mt-[4.5rem] relative">
+                <FondoImagen src="/img/hero.jpg" className="text-white min-h-[100dvh] flex flex-col justify-between">
                     {/* Capa de color dinámico que cubre todo el fondo */}
                     <div
                         className="pointer-events-none absolute inset-0 transition-all duration-1000"
                         style={{ background: `radial-gradient(ellipse 80% 60% at 70% 40%, ${colorActual}25 0%, transparent 70%)` }}
                     />
-                    <Contenedor className="relative pb-24 pt-36 sm:pb-32 sm:pt-48">
-                        {/* Hero: texto a la izquierda, carrusel a la derecha */}
-                        <div className="flex flex-col items-center gap-12 lg:flex-row lg:items-center lg:justify-between lg:gap-16">
-                            {/* Columna izquierda: texto + botones */}
-                            <div className="flex-1 text-center lg:text-left">
-                                <h1 className="font-display text-4xl leading-[1.1] sm:text-5xl lg:text-6xl">
-                                    Bienvenido al servicio de venta de cuentas más grande de Latinoamérica
-                                </h1>
-                                <p className="mt-5 text-white/75 sm:text-lg">
-                                    Streaming, inteligencia artificial y edición en un solo lugar, con entrega inmediata.
-                                </p>
-                                <div className="mt-9 flex flex-col justify-center gap-3 sm:flex-row lg:justify-start">
-                                    <a href="#catalogo" className="rounded-full bg-brand px-7 py-3 text-center text-sm font-bold text-ink transition-colors hover:bg-brand-600">Ver catálogo</a>
-                                    {!usuario && <Link to="/registro" className="rounded-full bg-white px-7 py-3 text-center text-sm font-bold text-ink transition-colors hover:bg-brand-50">Crear cuenta</Link>}
+
+                    {/* SECCIÓN 1: INICIO (Ocupa el 100% de la altura de la pantalla) */}
+                    <section id="inicio" className="relative flex flex-1 flex-col justify-center min-h-[100dvh] pt-28 pb-12 sm:pt-36 sm:pb-16">
+                        <Contenedor className="w-full">
+                            {/* Hero: texto a la izquierda, carrusel a la derecha */}
+                            <div className="flex flex-col items-center gap-12 lg:flex-row lg:items-center lg:justify-between lg:gap-16">
+                                {/* Columna izquierda: texto + botones */}
+                                <div className="flex-1 text-center lg:text-left">
+                                    <h1 className="font-display text-4xl leading-[1.1] sm:text-5xl lg:text-6xl">
+                                        Bienvenido al servicio de venta de cuentas más grande de Latinoamérica
+                                    </h1>
+                                    <p className="mt-5 text-white/75 sm:text-lg">
+                                        Streaming, inteligencia artificial y edición en un solo lugar, con entrega inmediata.
+                                    </p>
+                                    <div className="mt-9 flex flex-col justify-center gap-3 sm:flex-row lg:justify-start">
+                                        <a href="#catalogo" className="rounded-full bg-brand px-7 py-3 text-center text-sm font-bold text-ink transition-colors hover:bg-brand-600 shadow-lg shadow-brand/20">Ver catálogo</a>
+                                        {!usuario && <Link to="/registro" className="rounded-full bg-white px-7 py-3 text-center text-sm font-bold text-ink transition-colors hover:bg-brand-50 shadow-lg shadow-white/10">Crear cuenta</Link>}
+                                    </div>
+                                </div>
+
+                                {/* Columna derecha: carrusel */}
+                                <div className="flex-shrink-0">
+                                    <CarruselLogos onColor={setColorActual} />
                                 </div>
                             </div>
+                        </Contenedor>
+                    </section>
 
-                            {/* Columna derecha: carrusel */}
-                            <div className="flex-shrink-0">
-                                <CarruselLogos onColor={setColorActual} />
-                            </div>
-                        </div>
-
-                        <div id="como-funciona" className="mt-24 scroll-mt-24">
+                    {/* SECCIÓN 2: CÓMO FUNCIONA (Bloque oscuro intermedio antes de las secciones blancas) */}
+                    <section id="como-funciona" className="relative scroll-mt-20 border-t border-white/10 bg-black/40 py-20 sm:py-28 backdrop-blur-xs">
+                        <Contenedor>
                             <TituloSeccion>Cómo funciona</TituloSeccion>
                             <ol className="grid gap-4 sm:grid-cols-3">
                                 {pasos.map((paso, indice) => (
-                                    <li key={paso.titulo} className="rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
+                                    <li key={paso.titulo} className="group rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm transition-all duration-200 hover:border-white/20 hover:bg-white/10">
                                         <span className="font-mono text-sm text-brand">{String(indice + 1).padStart(2, "0")}</span>
                                         <p className="mt-3 text-xl font-bold">{paso.titulo}</p>
                                         <p className="mt-1 text-sm text-white/65">{paso.texto}</p>
                                     </li>
                                 ))}
                             </ol>
-                        </div>
-                    </Contenedor>
+                        </Contenedor>
+                    </section>
                 </FondoImagen>
-            </section>
+            </div>
 
-            {/* Contenedor blanco/oscuro para catálogo y preguntas frecuentes */}
-            <div className="bg-white dark:bg-[#0c0d10] text-ink dark:text-neutral-100 transition-colors">
-                <Contenedor className="space-y-20 pt-16 sm:space-y-24 sm:pt-20">
+            {/* SECCIONES BLANCAS CON OVERLAY ELEGANTE Y MODERNO */}
+            <div className="relative bg-gradient-to-b from-slate-50/80 via-white to-slate-50/60 dark:from-[#0c0d10] dark:via-[#111318] dark:to-[#0c0d10] text-ink dark:text-neutral-100 transition-colors overflow-hidden">
+                {/* Overlay de cuadrícula de puntos sutil */}
+                <div
+                    className="pointer-events-none absolute inset-0 opacity-[0.45] dark:opacity-[0.25]"
+                    style={{
+                        backgroundImage: "radial-gradient(#94a3b8 1.2px, transparent 1.2px)",
+                        backgroundSize: "28px 28px"
+                    }}
+                />
+                {/* Halos ambientales tenues y limpios */}
+                <div className="pointer-events-none absolute -top-40 right-1/4 h-[500px] w-[500px] rounded-full bg-brand/5 blur-3xl" />
+                <div className="pointer-events-none absolute top-1/2 -left-40 h-[500px] w-[500px] rounded-full bg-blue-500/5 blur-3xl" />
+                <div className="pointer-events-none absolute bottom-12 right-10 h-[400px] w-[400px] rounded-full bg-brand/5 blur-3xl" />
+                <div className="pointer-events-none absolute top-0 inset-x-0 h-16 bg-gradient-to-b from-black/15 to-transparent" />
+
+                <Contenedor className="relative z-10 space-y-20 py-20 sm:space-y-28 sm:py-28">
                     <section id="catalogo" className="scroll-mt-24">
                         <TituloSeccion>Catálogo</TituloSeccion>
                         <VistaCatalogo />
@@ -179,7 +190,7 @@ export function Landing() {
                         <TituloSeccion>Preguntas frecuentes</TituloSeccion>
                         <div className="space-y-3">
                             {preguntas.map((item, indice) => (
-                                <details key={item.pregunta} className="group rounded-2xl border border-slate-200 dark:border-neutral-800 px-5 py-4 transition-colors open:bg-brand-50/60 dark:open:bg-neutral-900">
+                                <details key={item.pregunta} className="group rounded-2xl border border-slate-200/80 bg-white/80 dark:border-neutral-800 dark:bg-neutral-900/80 backdrop-blur-sm px-5 py-4 transition-all duration-200 shadow-xs hover:border-slate-300 dark:hover:border-neutral-700 open:bg-brand-50/70 open:border-brand-200 dark:open:bg-neutral-900 dark:open:border-neutral-700">
                                     <summary className="flex cursor-pointer list-none items-center gap-4 font-semibold text-ink dark:text-white">
                                         <span className="font-mono text-xs text-slate-400">{String(indice + 1).padStart(2, "0")}</span>
                                         <span className="flex-1">{item.pregunta}</span>

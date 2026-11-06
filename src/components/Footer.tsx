@@ -4,7 +4,7 @@ import { Contenedor, Marca } from "./ui"
 
 export function Footer() {
     return (
-        <footer className="mt-24 bg-brand text-ink">
+        <footer className="bg-brand text-ink">
             <Contenedor className="grid gap-10 py-12 sm:grid-cols-3">
                 <div>
                     <Marca />

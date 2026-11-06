@@ -17,10 +17,21 @@ export function Layout() {
     }, [pathname, hash])
 
     return (
-        <div className="flex min-h-screen flex-col">
+        <div className="flex min-h-screen flex-col bg-white dark:bg-[#0c0d10] text-ink dark:text-neutral-100 transition-colors relative">
             <Header />
-            <main className="flex-1">
-                <Outlet />
+            <main className="flex-1 relative">
+                {pathname !== "/" && (
+                    <div
+                        className="pointer-events-none absolute inset-0 opacity-[0.4] dark:opacity-[0.2] z-0"
+                        style={{
+                            backgroundImage: "radial-gradient(#94a3b8 1.2px, transparent 1.2px)",
+                            backgroundSize: "28px 28px"
+                        }}
+                    />
+                )}
+                <div className="relative z-10">
+                    <Outlet />
+                </div>
             </main>
             <Footer />
             <WhatsAppButton />
@@ -30,7 +41,7 @@ export function Layout() {
 
 export function LayoutContenido() {
     return (
-        <Contenedor className="pt-8 sm:pt-12">
+        <Contenedor className="pt-8 pb-16 sm:pt-12 sm:pb-24">
             <Outlet />
         </Contenedor>
     )
