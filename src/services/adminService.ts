@@ -89,7 +89,10 @@ const adminApi: AdminService = {
         return { message: respuesta.message, data: aPlataforma(respuesta.data) }
     },
     productos: () => conPlataformas(
-        todas<ProductoDto>("/admin/productos"),
+        todas<ProductoDto>("/admin/productos").catch((error: unknown) => {
+            if (error instanceof ApiError && error.status === 501) return { message: "", data: [] as ProductoDto[] }
+            throw error
+        }),
         (data, plataformas) => data.map((item) => aProducto(item, plataformas))
     ),
     crearProducto: (input) => conPlataformas(
@@ -103,11 +106,17 @@ const adminApi: AdminService = {
         aProducto
     ),
     compras: (filtro = {}) => conPlataformas(
-        todas<CompraDto>("/admin/compras", { estado: filtro.estado, desde: filtro.desde, hasta: filtro.hasta }),
+        todas<CompraDto>("/admin/compras", { estado: filtro.estado, desde: filtro.desde, hasta: filtro.hasta }).catch((error: unknown) => {
+            if (error instanceof ApiError && error.status === 501) return { message: "", data: [] as CompraDto[] }
+            throw error
+        }),
         (data, plataformas) => data.map((item) => aCompra(item, plataformas))
     ),
     resumen: () => conPlataformas(
-        request<ResumenDto>("/admin/resumen"),
+        request<ResumenDto>("/admin/resumen").catch((error: unknown) => {
+            if (error instanceof ApiError && error.status === 501) return { message: "", data: {} as ResumenDto }
+            throw error
+        }),
         (data, plataformas) => ({
             ventasHoy: dinero(data.ventasHoy),
             ventasMes: dinero(data.ventasMes),
