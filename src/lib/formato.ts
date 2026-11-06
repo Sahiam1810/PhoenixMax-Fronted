@@ -21,10 +21,7 @@ export function diasHasta(iso: string) {
 }
 
 export function estadoServicio(servicio: Servicio): EstadoVisualServicio {
-    const dias = diasHasta(servicio.fechaVencimiento)
-    if (servicio.estado === "vencido" || dias < 0) return "vencido"
-    if (dias <= 3) return "por_vencer"
-    return "activo"
+    return servicio.estado
 }
 
 export const etiquetaEstadoServicio: Record<EstadoVisualServicio, string> = {

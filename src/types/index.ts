@@ -4,7 +4,7 @@ export type TipoProducto = "cuenta" | "pantalla"
 export type EstadoCuenta = "disponible" | "parcial" | "vendida" | "inactiva"
 export type EstadoPantalla = "disponible" | "vendida"
 export type EstadoCompra = "pendiente" | "pagada" | "cancelada"
-export type EstadoServicio = "activo" | "vencido"
+export type EstadoServicio = "activo" | "por_vencer" | "vencido"
 export type EstadoVisualServicio = "activo" | "por_vencer" | "vencido"
 
 export interface Usuario {
@@ -82,6 +82,7 @@ export interface Servicio {
     pin: string | null
     fechaInicio: string
     fechaVencimiento: string
+    diasRestantes: number
     estado: EstadoServicio
 }
 

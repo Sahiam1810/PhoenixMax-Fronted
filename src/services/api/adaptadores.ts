@@ -250,7 +250,8 @@ export function aServicio(dto: ServicioDto, plataformas: Plataforma[]): Servicio
         pin: dto.pin,
         fechaInicio: dto.fechaInicio,
         fechaVencimiento: dto.fechaVencimiento,
-        estado: dto.estado === "vencido" ? "vencido" : "activo"
+        diasRestantes: dto.diasRestantes ?? 0,
+        estado: dto.estado
     }
 }
 
