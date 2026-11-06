@@ -218,7 +218,8 @@ export function aCarrito(dto: CarritoDto, plataformas: Plataforma[]): Carrito {
 }
 
 export function aCompra(dto: CompraDto, plataformas: Plataforma[]): Compra {
-    const items: CompraItem[] = (dto.items ?? []).map((item) => ({
+    const listaItems = dto.items ?? (dto as unknown as { compraItems?: CompraItemDto[] }).compraItems ?? []
+    const items: CompraItem[] = listaItems.map((item) => ({
         id: item.id,
         producto: productoDeResumen(item.productoId, item.producto, item.precioUnitario, 0, plataformas),
         cantidad: item.cantidad,

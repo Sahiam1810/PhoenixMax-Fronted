@@ -5,11 +5,11 @@ import { IconoMas, IconoMenos, LogoAlas } from "./iconos"
 type VarianteBoton = "primario" | "marca" | "secundario" | "peligro" | "fantasma"
 
 const estilosBoton: Record<VarianteBoton, string> = {
-    primario: "bg-ink text-white hover:bg-neutral-800",
+    primario: "bg-ink text-white hover:bg-neutral-800 dark:bg-white dark:text-ink dark:hover:bg-neutral-200",
     marca: "bg-brand text-ink hover:bg-brand-600",
-    secundario: "border border-slate-300 bg-white text-ink hover:bg-slate-50",
-    peligro: "text-red-600 hover:bg-red-50",
-    fantasma: "text-slate-700 hover:bg-slate-100"
+    secundario: "border border-slate-300 bg-white text-ink hover:bg-slate-50 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100 dark:hover:bg-neutral-700",
+    peligro: "text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30",
+    fantasma: "text-slate-700 hover:bg-slate-100 dark:text-neutral-300 dark:hover:bg-neutral-800"
 }
 
 interface BotonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -39,11 +39,11 @@ export function Campo({ etiqueta, error, id, className = "", ...props }: CampoPr
     const campoId = id ?? props.name
     return (
         <label htmlFor={campoId} className={`block ${className}`}>
-            <span className="mb-1.5 block text-sm font-semibold text-slate-700">{etiqueta}</span>
+            <span className="mb-1.5 block text-sm font-semibold text-slate-700 dark:text-neutral-300">{etiqueta}</span>
             <input
                 id={campoId}
                 aria-invalid={error ? true : undefined}
-                className={`w-full rounded-lg border bg-slate-100 px-3.5 py-2.5 text-sm outline-none transition-colors placeholder:text-slate-400 focus:bg-white focus:ring-2 focus:ring-brand ${error ? "border-red-400" : "border-transparent"}`}
+                className={`w-full rounded-lg border bg-slate-100 px-3.5 py-2.5 text-sm outline-none transition-colors placeholder:text-slate-400 focus:bg-white focus:ring-2 focus:ring-brand dark:bg-neutral-800 dark:border-neutral-700 dark:text-white dark:placeholder:text-neutral-500 dark:focus:bg-neutral-850 ${error ? "border-red-400" : "border-transparent"}`}
                 {...props}
             />
             {error && <span className="mt-1 block text-xs text-red-600">{error}</span>}
@@ -59,8 +59,8 @@ export function Selector({ etiqueta, id, children, className = "", ...props }: S
     const campoId = id ?? props.name
     return (
         <label htmlFor={campoId} className={`block ${className}`}>
-            <span className="mb-1.5 block text-sm font-semibold text-slate-700">{etiqueta}</span>
-            <select id={campoId} className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand" {...props}>
+            <span className="mb-1.5 block text-sm font-semibold text-slate-700 dark:text-neutral-300">{etiqueta}</span>
+            <select id={campoId} className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-brand dark:border-neutral-700 dark:bg-neutral-800 dark:text-white" {...props}>
                 {children}
             </select>
         </label>
@@ -91,9 +91,9 @@ export function Cargando({ texto = "Cargando..." }: { texto?: string }) {
 
 export function Vacio({ titulo, children }: { titulo: string, children?: ReactNode }) {
     return (
-        <div className="rounded-2xl border border-dashed border-slate-300 px-6 py-12 text-center">
-            <p className="font-semibold text-ink">{titulo}</p>
-            {children && <div className="mt-2 text-sm text-slate-500">{children}</div>}
+        <div className="rounded-2xl border border-dashed border-slate-300 dark:border-neutral-800 px-6 py-12 text-center">
+            <p className="font-semibold text-ink dark:text-white">{titulo}</p>
+            {children && <div className="mt-2 text-sm text-slate-500 dark:text-neutral-400">{children}</div>}
         </div>
     )
 }
@@ -190,5 +190,5 @@ export function SelectorCantidad({ valor, maximo, onCambio, deshabilitado = fals
 }
 
 export function Tarjeta({ children, className = "" }: { children: ReactNode, className?: string }) {
-    return <div className={`rounded-2xl border border-slate-200 bg-white ${className}`}>{children}</div>
+    return <div className={`rounded-2xl border border-slate-200 bg-white dark:border-neutral-800 dark:bg-neutral-900 ${className}`}>{children}</div>
 }

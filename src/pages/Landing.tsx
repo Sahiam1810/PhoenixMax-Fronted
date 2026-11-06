@@ -167,7 +167,8 @@ export function Landing() {
                 </FondoImagen>
             </section>
 
-            <div className="bg-white text-ink">
+            {/* Contenedor blanco/oscuro para catálogo y preguntas frecuentes */}
+            <div className="bg-white dark:bg-[#0c0d10] text-ink dark:text-neutral-100 transition-colors">
                 <Contenedor className="space-y-20 pt-16 sm:space-y-24 sm:pt-20">
                     <section id="catalogo" className="scroll-mt-24">
                         <TituloSeccion>Catálogo</TituloSeccion>
@@ -178,13 +179,13 @@ export function Landing() {
                         <TituloSeccion>Preguntas frecuentes</TituloSeccion>
                         <div className="space-y-3">
                             {preguntas.map((item, indice) => (
-                                <details key={item.pregunta} className="group rounded-2xl border border-slate-200 px-5 py-4 transition-colors open:bg-brand-50/60">
-                                    <summary className="flex cursor-pointer list-none items-center gap-4 font-semibold">
+                                <details key={item.pregunta} className="group rounded-2xl border border-slate-200 dark:border-neutral-800 px-5 py-4 transition-colors open:bg-brand-50/60 dark:open:bg-neutral-900">
+                                    <summary className="flex cursor-pointer list-none items-center gap-4 font-semibold text-ink dark:text-white">
                                         <span className="font-mono text-xs text-slate-400">{String(indice + 1).padStart(2, "0")}</span>
                                         <span className="flex-1">{item.pregunta}</span>
                                         <span className="text-xl leading-none text-slate-400 transition-transform duration-150 group-open:rotate-45">+</span>
                                     </summary>
-                                    <p className="mt-3 pl-9 text-sm text-slate-600">{item.respuesta}</p>
+                                    <p className="mt-3 pl-9 text-sm text-slate-600 dark:text-neutral-300">{item.respuesta}</p>
                                 </details>
                             ))}
                         </div>

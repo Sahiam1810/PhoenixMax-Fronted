@@ -93,26 +93,26 @@ export function DetalleProducto() {
 
     return (
         <div>
-            <Link to="/catalogo" className="mb-6 inline-flex items-center gap-1 text-sm font-semibold uppercase tracking-wide text-slate-600 hover:text-ink">
+            <Link to="/catalogo" className="mb-6 inline-flex items-center gap-1 text-sm font-semibold uppercase tracking-wide text-slate-600 hover:text-ink dark:text-neutral-400 dark:hover:text-white">
                 <IconoAtras className="size-4" />
                 Volver al catálogo
             </Link>
             <div className="grid gap-8 lg:grid-cols-2">
                 <div className="space-y-4">
                     <LogoPlataforma plataforma={producto.plataforma} tamano="grande" className="aspect-[4/3] rounded-3xl" />
-                    <p className="text-sm text-slate-600">{producto.plataforma.descripcion}</p>
+                    <p className="text-sm text-slate-600 dark:text-neutral-300">{producto.plataforma.descripcion}</p>
                 </div>
                 <div className="space-y-6">
                     <div>
                         <div className="flex flex-wrap items-center gap-2">
                             <Insignia>{etiquetaCategoria[producto.plataforma.categoria]}</Insignia>
-                            {agotado && <Insignia className="bg-red-100 text-red-700">Agotado</Insignia>}
+                            {agotado && <Insignia className="bg-red-100 text-red-700 dark:bg-red-950/60 dark:text-red-300">Agotado</Insignia>}
                         </div>
-                        <h1 className="mt-3 text-2xl font-extrabold sm:text-3xl">{producto.plataforma.nombre}</h1>
-                        <p className="text-slate-600">{etiquetaTipo[producto.tipo]} · {duracion(producto.duracionDias)}</p>
-                        <p className="mt-4 text-3xl font-extrabold">{precio(producto.precio)}</p>
+                        <h1 className="mt-3 text-2xl font-extrabold sm:text-3xl text-ink dark:text-white">{producto.plataforma.nombre}</h1>
+                        <p className="text-slate-600 dark:text-neutral-400">{etiquetaTipo[producto.tipo]} · {duracion(producto.duracionDias)}</p>
+                        <p className="mt-4 text-3xl font-extrabold text-ink dark:text-white">{precio(producto.precio)}</p>
                         {ahorro > 0 && precioCuenta !== undefined && (
-                            <p className="mt-2 rounded-lg bg-brand-50 px-3 py-2 text-sm text-brand-700">
+                            <p className="mt-2 rounded-lg bg-brand-50 px-3 py-2 text-sm text-brand-700 dark:bg-brand-950/40 dark:text-brand-300">
                                 {producto.tipo === "cuenta"
                                     ? <>Equivale a {pantallas} pantallas ({precio(precioPantallas)}). <strong>Ahorras {precio(ahorro)}.</strong></>
                                     : <>¿Necesitas las {pantallas} pantallas? La cuenta completa cuesta {precio(precioCuenta)} y <strong>ahorras {precio(ahorro)}</strong>.</>}
@@ -122,18 +122,18 @@ export function DetalleProducto() {
 
                     {otras.length > 1 && (
                         <div>
-                            <p className="mb-2 text-sm font-semibold">Elige la modalidad</p>
+                            <p className="mb-2 text-sm font-semibold text-ink dark:text-white">Elige la modalidad</p>
                             <div className="grid gap-2 sm:grid-cols-2">
                                 {otras.map((item) => (
                                     <Link
                                         key={item.id}
                                         to={`/producto/${item.id}`}
                                         replace
-                                        className={`rounded-xl border-2 p-3 transition-colors duration-150 ${item.id === producto.id ? "border-ink bg-slate-50" : "border-slate-200 hover:border-slate-400"}`}
+                                        className={`rounded-xl border-2 p-3 transition-colors duration-150 ${item.id === producto.id ? "border-ink bg-slate-50 dark:border-brand dark:bg-neutral-800" : "border-slate-200 dark:border-neutral-800 hover:border-slate-400 dark:hover:border-neutral-600"}`}
                                     >
-                                        <p className="text-sm font-bold">{etiquetaTipo[item.tipo]}</p>
-                                        <p className="text-xs text-slate-500">{duracion(item.duracionDias)} · {precio(item.precio)}</p>
-                                        <p className={`mt-1 text-xs font-semibold ${item.stock === 0 ? "text-red-600" : "text-slate-500"}`}>{item.stock === 0 ? "Agotado" : `${item.stock} ${item.stock === 1 ? "disponible" : "disponibles"}`}</p>
+                                        <p className="text-sm font-bold text-ink dark:text-white">{etiquetaTipo[item.tipo]}</p>
+                                        <p className="text-xs text-slate-500 dark:text-neutral-400">{duracion(item.duracionDias)} · {precio(item.precio)}</p>
+                                        <p className={`mt-1 text-xs font-semibold ${item.stock === 0 ? "text-red-600 dark:text-red-400" : "text-slate-500 dark:text-neutral-400"}`}>{item.stock === 0 ? "Agotado" : `${item.stock} ${item.stock === 1 ? "disponible" : "disponibles"}`}</p>
                                     </Link>
                                 ))}
                             </div>

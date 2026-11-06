@@ -62,8 +62,8 @@ export function Registro() {
                 <Campo etiqueta="Confirmar contraseña" name="confirmacion" type="password" autoComplete="new-password" placeholder="Repite tu contraseña" value={form.confirmacion} error={errores.confirmacion} onChange={(evento) => cambiar("confirmacion", evento.target.value)} />
                 {error && <Aviso tipo="error">{error}</Aviso>}
                 <Boton type="submit" className="w-full py-3" cargando={enviando}>Crear cuenta</Boton>
-                <p className="text-center text-sm text-slate-600">
-                    ¿Ya tienes cuenta? <Link to="/login" state={location.state} className="font-bold text-ink underline">Inicia sesión</Link>
+                <p className="text-center text-sm text-slate-600 dark:text-neutral-400">
+                    ¿Ya tienes cuenta? <Link to="/login" state={location.state} className="font-bold text-ink dark:text-brand underline">Inicia sesión</Link>
                 </p>
             </form>
         </AuthLayout>

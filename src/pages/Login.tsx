@@ -6,7 +6,6 @@ import { useAuth } from "../context/AuthContext"
 import { esEmail, sinErrores, type Errores } from "../lib/validacion"
 import { authService } from "../services/authService"
 import { mensajeError } from "../services/http"
-import { modoActual } from "../services/modo"
 import type { LoginInput } from "../types"
 
 function rutaDestino(estado: unknown) {
@@ -22,7 +21,6 @@ export function Login() {
     const [error, setError] = useState("")
     const [enviando, setEnviando] = useState(false)
     const desde = rutaDestino(location.state)
-    const usarMocks = modoActual() === "mock"
 
     if (usuario) return <Navigate to={desde ?? (usuario.rol === "admin" ? "/admin" : "/")} replace />
 
@@ -54,8 +52,8 @@ export function Login() {
                 <Campo etiqueta="Contraseña" name="password" type="password" autoComplete="current-password" placeholder="••••••••" value={form.password} error={errores.password} onChange={(evento) => setForm({ ...form, password: evento.target.value })} />
                 {error && <Aviso tipo="error">{error}</Aviso>}
                 <Boton type="submit" className="w-full py-3" cargando={enviando}>Entrar</Boton>
-                <p className="text-center text-sm text-slate-600">
-                    ¿No tienes cuenta? <Link to="/registro" state={location.state} className="font-bold text-ink underline">Regístrate</Link>
+                <p className="text-center text-sm text-slate-600 dark:text-neutral-400">
+                    ¿No tienes cuenta? <Link to="/registro" state={location.state} className="font-bold text-ink dark:text-brand underline">Regístrate</Link>
                 </p>
 
             </form>

@@ -78,8 +78,8 @@ function FilaProducto({ producto, onCambio }: { producto: Producto, onCambio: (t
             <Td>{duracion(producto.duracionDias)}</Td>
             <Td>
                 <div className="flex items-center gap-2">
-                    <input aria-label="Precio" type="number" min={0} step={500} value={valor} onChange={(evento) => setValor(evento.target.value)} className="w-28 rounded-md border border-slate-300 px-2 py-1 text-sm" />
-                    {cambioPrecio && <button type="button" disabled={ocupado} onClick={() => actualizar({ precio: nuevoPrecio })} className="text-xs font-semibold text-ink underline">Guardar</button>}
+                    <input aria-label="Precio" type="number" min={0} step={500} value={valor} onChange={(evento) => setValor(evento.target.value)} className="w-28 rounded-md border border-slate-300 px-2 py-1 text-sm dark:border-neutral-700 dark:bg-neutral-800 dark:text-white" />
+                    {cambioPrecio && <button type="button" disabled={ocupado} onClick={() => actualizar({ precio: nuevoPrecio })} className="text-xs font-semibold text-ink dark:text-brand underline">Guardar</button>}
                 </div>
                 <p className="mt-0.5 text-xs text-slate-500">{precio(producto.precio)}</p>
             </Td>

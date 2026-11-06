@@ -64,17 +64,17 @@ export function MenuCuenta({ usuario }: { usuario: Usuario }) {
                 <IconoChevron className={`size-4 transition-transform duration-150 ${abierto ? "rotate-180" : ""}`} />
             </button>
             {abierto && (
-                <div role="menu" className="absolute right-0 z-30 mt-2 w-60 overflow-hidden rounded-xl border border-slate-200 bg-white py-1 shadow-lg">
-                    <div className="border-b border-slate-100 px-4 py-3">
+                <div role="menu" className="absolute right-0 z-30 mt-2 w-60 overflow-hidden rounded-xl border border-slate-200 bg-white py-1 shadow-lg dark:border-neutral-800 dark:bg-neutral-900 dark:text-white">
+                    <div className="border-b border-slate-100 px-4 py-3 dark:border-neutral-800">
                         <p className="truncate text-sm font-bold">{usuario.nombre}</p>
-                        <p className="truncate text-xs text-slate-500">{usuario.email}</p>
+                        <p className="truncate text-xs text-slate-500 dark:text-neutral-400">{usuario.email}</p>
                     </div>
                     {opcionesPara(usuario).map((opcion) => (
-                        <Link key={opcion.ruta} role="menuitem" to={opcion.ruta} onClick={() => setAbierto(false)} className="block px-4 py-2.5 text-sm hover:bg-slate-50">
+                        <Link key={opcion.ruta} role="menuitem" to={opcion.ruta} onClick={() => setAbierto(false)} className="block px-4 py-2.5 text-sm hover:bg-slate-50 dark:hover:bg-neutral-800">
                             {opcion.texto}
                         </Link>
                     ))}
-                    <button type="button" role="menuitem" onClick={salir} className="block w-full border-t border-slate-100 px-4 py-2.5 text-left text-sm text-red-600 hover:bg-red-50">
+                    <button type="button" role="menuitem" onClick={salir} className="block w-full border-t border-slate-100 px-4 py-2.5 text-left text-sm text-red-600 hover:bg-red-50 dark:border-neutral-800 dark:hover:bg-red-950/30">
                         Cerrar sesión
                     </button>
                 </div>

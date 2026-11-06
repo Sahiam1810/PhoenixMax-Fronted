@@ -93,8 +93,8 @@ export function Usuarios() {
     const filtros = (
         <>
             <label className="block">
-                <span className="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500">Buscar</span>
-                <input value={busqueda} onChange={(evento) => setBusqueda(evento.target.value)} placeholder="Nombre o correo" className="w-full rounded-md border border-slate-300 bg-white px-2.5 py-1.5 text-sm outline-none focus:ring-2 focus:ring-brand" />
+                <span className="mb-2 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-neutral-400">Buscar</span>
+                <input value={busqueda} onChange={(evento) => setBusqueda(evento.target.value)} placeholder="Nombre o correo" className="w-full rounded-md border border-slate-300 bg-white px-2.5 py-1.5 text-sm outline-none focus:ring-2 focus:ring-brand dark:border-neutral-700 dark:bg-neutral-800 dark:text-white" />
             </label>
             <GrupoFiltro
                 titulo="Rol"

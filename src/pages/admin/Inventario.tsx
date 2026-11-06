@@ -185,19 +185,19 @@ export function Inventario() {
                                             <div className="flex items-center gap-2">
                                                 <div className="flex gap-0.5">
                                                     {cuenta.pantallas.map((pantalla) => (
-                                                        <span key={pantalla.id} title={`${pantalla.nombrePerfil}: ${pantalla.estado}`} className={`h-3 w-2 rounded-sm ${pantalla.estado === "vendida" ? "bg-ink" : "bg-slate-300"}`} />
+                                                        <span key={pantalla.id} title={`${pantalla.nombrePerfil}: ${pantalla.estado}`} className={`h-3 w-2 rounded-sm ${pantalla.estado === "vendida" ? "bg-ink dark:bg-brand" : "bg-slate-300 dark:bg-neutral-700"}`} />
                                                     ))}
                                                 </div>
-                                                <span className="text-xs text-slate-500">{vendidas(cuenta)}/{cuenta.pantallas.length}</span>
+                                                <span className="text-xs text-slate-500 dark:text-neutral-400">{vendidas(cuenta)}/{cuenta.pantallas.length}</span>
                                             </div>
                                         </Td>
-                                        <Td className="text-xs text-slate-500">{cuenta.createdAt ? formatoFecha(cuenta.createdAt) : "—"}</Td>
+                                        <Td className="text-xs text-slate-500 dark:text-neutral-400">{cuenta.createdAt ? formatoFecha(cuenta.createdAt) : "—"}</Td>
                                         <Td className="whitespace-nowrap text-right">
-                                            <button type="button" onClick={() => setExpandida(expandida === cuenta.id ? null : cuenta.id)} className="mr-3 text-xs font-semibold text-slate-600 hover:text-ink">
+                                            <button type="button" onClick={() => setExpandida(expandida === cuenta.id ? null : cuenta.id)} className="mr-3 text-xs font-semibold text-slate-600 hover:text-ink dark:text-neutral-400 dark:hover:text-white">
                                                 {expandida === cuenta.id ? "Ocultar" : "Pantallas"}
                                             </button>
                                             {cuenta.estado !== "vendida" && (
-                                                <button type="button" disabled={ocupada === cuenta.id} onClick={() => cambiarEstado(cuenta)} className={`text-xs font-semibold disabled:opacity-50 ${cuenta.estado === "inactiva" ? "text-emerald-700" : "text-red-600"}`}>
+                                                <button type="button" disabled={ocupada === cuenta.id} onClick={() => cambiarEstado(cuenta)} className={`text-xs font-semibold disabled:opacity-50 ${cuenta.estado === "inactiva" ? "text-emerald-700 dark:text-emerald-400" : "text-red-600 dark:text-red-400"}`}>
                                                     {cuenta.estado === "inactiva" ? "Activar" : "Desactivar"}
                                                 </button>
                                             )}
@@ -205,13 +205,13 @@ export function Inventario() {
                                     </tr>
                                     {expandida === cuenta.id && (
                                         <tr>
-                                            <td colSpan={6} className="border-b border-slate-100 bg-slate-50 px-3 py-3">
+                                            <td colSpan={6} className="border-b border-slate-100 bg-slate-50 dark:border-neutral-800 dark:bg-neutral-900/60 px-3 py-3">
                                                 <div className="grid gap-2 sm:grid-cols-3 lg:grid-cols-5">
                                                     {cuenta.pantallas.map((pantalla) => (
-                                                        <div key={pantalla.id} className="rounded-md border border-slate-200 bg-white px-3 py-2 text-xs">
-                                                            <p className="font-semibold">{pantalla.nombrePerfil}</p>
-                                                            {pantalla.pin && <p className="text-slate-500">PIN {pantalla.pin}</p>}
-                                                            <p className={pantalla.estado === "vendida" ? "font-semibold text-ink" : "text-emerald-700"}>{pantalla.estado === "vendida" ? "Vendida" : "Disponible"}</p>
+                                                        <div key={pantalla.id} className="rounded-md border border-slate-200 bg-white dark:border-neutral-800 dark:bg-neutral-800 px-3 py-2 text-xs">
+                                                            <p className="font-semibold text-ink dark:text-white">{pantalla.nombrePerfil}</p>
+                                                            {pantalla.pin && <p className="text-slate-500 dark:text-neutral-400">PIN {pantalla.pin}</p>}
+                                                            <p className={pantalla.estado === "vendida" ? "font-semibold text-ink dark:text-neutral-300" : "text-emerald-700 dark:text-emerald-400"}>{pantalla.estado === "vendida" ? "Vendida" : "Disponible"}</p>
                                                         </div>
                                                     ))}
                                                 </div>

@@ -1,8 +1,9 @@
 import { Link, NavLink } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
 import { useCart } from "../context/CartContext"
+import { useTheme } from "../context/ThemeContext"
 import { enlaceWhatsApp } from "../lib/config"
-import { IconoCarrito, IconoUsuario, IconoWhatsApp } from "./iconos"
+import { IconoCarrito, IconoLuna, IconoSol, IconoUsuario, IconoWhatsApp } from "./iconos"
 import { MenuCuenta } from "./MenuCuenta"
 import { Marca } from "./ui"
 
@@ -12,6 +13,7 @@ const clara = "bg-white text-ink hover:bg-brand-50"
 export function Header() {
     const { usuario } = useAuth()
     const { contador } = useCart()
+    const { esOscuro, alternarTema } = useTheme()
 
     return (
         <header className="sticky top-0 z-30 px-3 pt-3 sm:px-8 lg:px-12 xl:px-24">
@@ -27,6 +29,15 @@ export function Header() {
                         <span className="hidden md:inline">Soporte</span>
                         <IconoWhatsApp className="size-5 text-[#1fa855]" />
                     </a>
+                    <button
+                        type="button"
+                        onClick={alternarTema}
+                        aria-label={esOscuro ? "Activar modo claro" : "Activar modo oscuro"}
+                        title={esOscuro ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
+                        className="grid size-10 place-items-center rounded-full bg-white text-ink shadow-sm ring-1 ring-black/5 transition-colors duration-150 hover:bg-brand-50 dark:bg-neutral-900 dark:text-amber-400 dark:hover:bg-neutral-800"
+                    >
+                        {esOscuro ? <IconoSol className="size-5" /> : <IconoLuna className="size-5" />}
+                    </button>
                     {usuario ? (
                         <MenuCuenta usuario={usuario} />
                     ) : (

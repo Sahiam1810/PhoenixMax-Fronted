@@ -249,6 +249,7 @@ export function servicioCompleto(base: MockDb, servicio: ServicioDb): Servicio {
     if (!cuenta) fallo("Cuenta no encontrada", 404)
     const pantalla = base.pantallas.find((item) => item.id === servicio.pantallaId) ?? null
     const compraItem = base.compraItems.find((item) => item.id === servicio.compraItemId)
+    const dias = diasRestantes(servicio.fechaVencimiento)
     return {
         id: servicio.id,
         compraId: compraItem?.compraId ?? 0,
@@ -260,7 +261,8 @@ export function servicioCompleto(base: MockDb, servicio: ServicioDb): Servicio {
         pin: pantalla?.pin ?? null,
         fechaInicio: servicio.fechaInicio,
         fechaVencimiento: servicio.fechaVencimiento,
-        estado: diasRestantes(servicio.fechaVencimiento) < 0 ? "vencido" : servicio.estado
+        diasRestantes: dias,
+        estado: dias < 0 ? "vencido" : dias <= 3 ? "por_vencer" : "activo"
     }
 }
 

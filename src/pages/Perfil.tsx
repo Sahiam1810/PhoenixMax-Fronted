@@ -48,7 +48,7 @@ function MisServicios() {
         <div className="space-y-4">
             <div className="-mx-5 flex gap-2 overflow-x-auto px-5 sm:mx-0 sm:px-0">
                 {opciones.map(([valor, texto]) => (
-                    <button key={valor} type="button" onClick={() => setFiltro(valor)} aria-pressed={filtro === valor} className={`shrink-0 rounded-full border px-3 py-1 text-xs font-semibold transition-colors ${filtro === valor ? "border-ink bg-ink text-white" : "border-slate-300 hover:border-ink"}`}>
+                    <button key={valor} type="button" onClick={() => setFiltro(valor)} aria-pressed={filtro === valor} className={`shrink-0 rounded-full border px-3 py-1 text-xs font-semibold transition-colors ${filtro === valor ? "border-ink bg-ink text-white dark:border-brand dark:bg-brand dark:text-ink font-bold" : "border-slate-300 dark:border-neutral-700 dark:text-neutral-300 hover:border-ink dark:hover:border-neutral-400"}`}>
                         {texto}
                     </button>
                 ))}
@@ -70,21 +70,21 @@ function MisCompras() {
         <ul className="space-y-3">
             {compras.map((compra) => (
                 <li key={compra.id}>
-                    <details className="group rounded-2xl border border-slate-200 bg-white">
+                    <details className="group rounded-2xl border border-slate-200 bg-white dark:border-neutral-800 dark:bg-neutral-900">
                         <summary className="flex cursor-pointer list-none flex-wrap items-center justify-between gap-3 p-4">
                             <div>
-                                <p className="font-bold">Pedido #{compra.id}</p>
-                                <p className="text-xs text-slate-500">{formatoFechaHora(compra.createdAt)} · {compra.items.length} {compra.items.length === 1 ? "producto" : "productos"}</p>
+                                <p className="font-bold text-ink dark:text-white">Pedido #{compra.id}</p>
+                                <p className="text-xs text-slate-500 dark:text-neutral-400">{formatoFechaHora(compra.createdAt)} · {compra.items.length} {compra.items.length === 1 ? "producto" : "productos"}</p>
                             </div>
                             <div className="flex items-center gap-3">
                                 <Insignia className={coloresCompra[compra.estado]}>{etiquetaEstadoCompra[compra.estado]}</Insignia>
-                                <p className="font-extrabold">{precio(compra.total)}</p>
+                                <p className="font-extrabold text-ink dark:text-white">{precio(compra.total)}</p>
                                 <span className="text-slate-400 transition-transform duration-150 group-open:rotate-180">▾</span>
                             </div>
                         </summary>
-                        <div className="border-t border-slate-100 px-4 pb-4">
+                        <div className="border-t border-slate-100 dark:border-neutral-800 px-4 pb-4">
                             <table className="mt-3 w-full text-left text-sm">
-                                <thead className="text-xs text-slate-500">
+                                <thead className="text-xs text-slate-500 dark:text-neutral-400">
                                     <tr>
                                         <th className="py-1 font-semibold">Producto</th>
                                         <th className="py-1 text-center font-semibold">Cant.</th>
@@ -94,19 +94,19 @@ function MisCompras() {
                                 </thead>
                                 <tbody>
                                     {compra.items.map((item) => (
-                                        <tr key={item.id} className="border-t border-slate-100">
+                                        <tr key={item.id} className="border-t border-slate-100 dark:border-neutral-800">
                                             <td className="py-2">
-                                                <p className="font-semibold">{item.producto.plataforma.nombre}</p>
-                                                <p className="text-xs text-slate-500">{etiquetaTipo[item.producto.tipo]} · {duracion(item.producto.duracionDias)}</p>
+                                                <p className="font-semibold text-ink dark:text-white">{item.producto.plataforma.nombre}</p>
+                                                <p className="text-xs text-slate-500 dark:text-neutral-400">{etiquetaTipo[item.producto.tipo]} · {duracion(item.producto.duracionDias)}</p>
                                             </td>
-                                            <td className="py-2 text-center">{item.cantidad}</td>
-                                            <td className="hidden py-2 text-right sm:table-cell">{precio(item.precioUnitario)}</td>
-                                            <td className="py-2 text-right font-semibold">{precio(item.subtotal)}</td>
+                                            <td className="py-2 text-center text-ink dark:text-neutral-200">{item.cantidad}</td>
+                                            <td className="hidden py-2 text-right sm:table-cell text-slate-600 dark:text-neutral-400">{precio(item.precioUnitario)}</td>
+                                            <td className="py-2 text-right font-semibold text-ink dark:text-white">{precio(item.subtotal)}</td>
                                         </tr>
                                     ))}
                                 </tbody>
                             </table>
-                            {compra.pagadaAt && <p className="mt-3 text-xs text-slate-500">Pagada el {formatoFecha(compra.pagadaAt)}</p>}
+                            {compra.pagadaAt && <p className="mt-3 text-xs text-slate-500 dark:text-neutral-400">Pagada el {formatoFecha(compra.pagadaAt)}</p>}
                         </div>
                     </details>
                 </li>
@@ -172,7 +172,7 @@ export function Perfil() {
                     <p className="truncate text-sm text-slate-500">{usuario.email}</p>
                 </div>
             </div>
-            <div role="tablist" className="mb-6 flex gap-1 border-b border-slate-200">
+            <div role="tablist" className="mb-6 flex gap-1 border-b border-slate-200 dark:border-neutral-800">
                 {pestanas.map(([clave, texto]) => (
                     <button
                         key={clave}
@@ -180,7 +180,7 @@ export function Perfil() {
                         role="tab"
                         aria-selected={activa === clave}
                         onClick={() => setParams({ tab: clave }, { replace: true })}
-                        className={`-mb-px border-b-2 px-3 py-2.5 text-sm font-semibold transition-colors sm:px-4 ${activa === clave ? "border-ink text-ink" : "border-transparent text-slate-500 hover:text-ink"}`}
+                        className={`-mb-px border-b-2 px-3 py-2.5 text-sm font-semibold transition-colors sm:px-4 ${activa === clave ? "border-ink text-ink dark:border-brand dark:text-brand" : "border-transparent text-slate-500 hover:text-ink dark:text-neutral-400 dark:hover:text-white"}`}
                     >
                         {texto}
                     </button>

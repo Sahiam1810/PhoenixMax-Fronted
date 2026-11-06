@@ -7,6 +7,7 @@ import { elegir } from "./modo"
 
 export interface ResultadoCron {
     enviados: number
+    whatsappEnviados?: number
     vencidos: number
     errores: number
 }
@@ -40,6 +41,7 @@ interface ResumenDto {
 
 interface CronDto {
     notificacionesEnviadas?: number
+    whatsappEnviados?: number
     serviciosVencidos?: number
     errores?: number
 }
@@ -144,7 +146,15 @@ const adminApi: AdminService = {
     },
     ejecutarCron: async () => {
         const respuesta = await request<CronDto>("/admin/cron/ejecutar", { method: "POST" })
-        return { message: respuesta.message, data: { enviados: respuesta.data.notificacionesEnviadas ?? 0, vencidos: respuesta.data.serviciosVencidos ?? 0, errores: respuesta.data.errores ?? 0 } }
+        return {
+            message: respuesta.message,
+            data: {
+                enviados: respuesta.data.notificacionesEnviadas ?? 0,
+                whatsappEnviados: respuesta.data.whatsappEnviados ?? 0,
+                vencidos: respuesta.data.serviciosVencidos ?? 0,
+                errores: respuesta.data.errores ?? 0
+            }
+        }
     }
 }
 

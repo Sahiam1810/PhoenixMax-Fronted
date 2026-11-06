@@ -88,8 +88,8 @@ function FilaPlataforma({ plataforma, onCambio }: { plataforma: Plataforma, onCa
             <Td>{etiquetaCategoria[plataforma.categoria]}</Td>
             <Td>
                 <div className="flex items-center gap-2">
-                    <input aria-label="Pantallas por cuenta" type="number" min={1} max={10} value={maximo} onChange={(evento) => setMaximo(evento.target.value)} className="w-16 rounded-md border border-slate-300 px-2 py-1 text-sm" />
-                    {cambio && <button type="button" disabled={ocupado} onClick={() => actualizar({ maxPantallas: nuevoMaximo })} className="text-xs font-semibold underline">Guardar</button>}
+                    <input aria-label="Pantallas por cuenta" type="number" min={1} max={10} value={maximo} onChange={(evento) => setMaximo(evento.target.value)} className="w-16 rounded-md border border-slate-300 px-2 py-1 text-sm dark:border-neutral-700 dark:bg-neutral-800 dark:text-white" />
+                    {cambio && <button type="button" disabled={ocupado} onClick={() => actualizar({ maxPantallas: nuevoMaximo })} className="text-xs font-semibold underline dark:text-brand">Guardar</button>}
                 </div>
             </Td>
             <Td className="text-right">

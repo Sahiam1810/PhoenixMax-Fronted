@@ -26,7 +26,7 @@ function Chip({ activo, onClick, children }: { activo: boolean, onClick: () => v
             type="button"
             onClick={onClick}
             aria-pressed={activo}
-            className={`shrink-0 rounded-full px-4 py-2 text-sm font-semibold transition-colors duration-150 ${activo ? "bg-ink text-white" : "bg-suave text-ink hover:bg-brand-100"}`}
+            className={`shrink-0 rounded-full px-4 py-2 text-sm font-semibold transition-colors duration-150 ${activo ? "bg-ink text-white dark:bg-brand dark:text-ink" : "bg-suave text-ink hover:bg-brand-100 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700"}`}
         >
             {children}
         </button>
@@ -74,7 +74,7 @@ export function VistaCatalogo() {
                                 type="button"
                                 aria-pressed={activa}
                                 onClick={() => cambiar("plataforma", activa ? undefined : item.id)}
-                                className={`flex w-20 shrink-0 flex-col items-center gap-1.5 rounded-2xl p-2 text-center transition-colors duration-150 ${activa ? "bg-ink text-white" : "hover:bg-suave/60"}`}
+                                className={`flex w-20 shrink-0 flex-col items-center gap-1.5 rounded-2xl p-2 text-center transition-colors duration-150 ${activa ? "bg-ink text-white dark:bg-brand dark:text-ink font-bold" : "hover:bg-suave/60 dark:hover:bg-neutral-800 dark:text-neutral-300"}`}
                             >
                                 <IconoPlataforma plataforma={item} className="size-12 rounded-2xl text-lg" />
                                 <span className="line-clamp-2 text-[11px] font-semibold leading-tight">{item.nombre}</span>
@@ -85,12 +85,12 @@ export function VistaCatalogo() {
                 <div className="flex flex-wrap items-center gap-3">
                     <label className="w-full sm:w-60">
                         <span className="sr-only">Modalidad</span>
-                        <select value={tipo ?? ""} onChange={(evento) => cambiar("tipo", evento.target.value || undefined)} className="w-full rounded-full border border-slate-300 bg-white px-4 py-2 text-sm">
+                        <select value={tipo ?? ""} onChange={(evento) => cambiar("tipo", evento.target.value || undefined)} className="w-full rounded-full border border-slate-300 bg-white px-4 py-2 text-sm dark:border-neutral-700 dark:bg-neutral-800 dark:text-white">
                             <option value="">Todas las modalidades</option>
                             {tipos.map((item) => <option key={item} value={item}>{etiquetaTipo[item]}</option>)}
                         </select>
                     </label>
-                    {!productos.cargando && <p className="text-sm text-slate-500 sm:ml-auto">{lista.length} productos</p>}
+                    {!productos.cargando && <p className="text-sm text-slate-500 dark:text-neutral-400 sm:ml-auto">{lista.length} productos</p>}
                 </div>
             </div>
             {productos.cargando && !productos.data && <Cargando texto="Cargando productos..." />}

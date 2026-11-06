@@ -37,23 +37,23 @@ export function Carrito() {
 
     return (
         <div>
-            <Link to="/catalogo" className="mb-6 inline-flex items-center gap-1 text-sm font-semibold uppercase tracking-wide text-slate-600 hover:text-ink">
+            <Link to="/catalogo" className="mb-6 inline-flex items-center gap-1 text-sm font-semibold uppercase tracking-wide text-slate-600 hover:text-ink dark:text-neutral-400 dark:hover:text-white">
                 <IconoAtras className="size-4" />
                 Volver a la tienda
             </Link>
             {carrito.items.length === 0 ? (
                 <Vacio titulo="Tu carrito está vacío">
                     <p>Explora el catálogo y agrega tus plataformas favoritas.</p>
-                    <Link to="/catalogo" className="mt-4 inline-block rounded-lg bg-ink px-5 py-2.5 font-semibold text-white">Ir al catálogo</Link>
+                    <Link to="/catalogo" className="mt-4 inline-block rounded-lg bg-ink px-5 py-2.5 font-semibold text-white dark:bg-brand dark:text-ink">Ir al catálogo</Link>
                 </Vacio>
             ) : (
-                <div className="grid gap-6 rounded-3xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6 lg:grid-cols-[1fr_22rem]">
+                <div className="grid gap-6 rounded-3xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6 lg:grid-cols-[1fr_22rem] dark:border-neutral-800 dark:bg-neutral-900">
                     <section>
-                        <h1 className="flex items-center gap-2 text-xl font-extrabold sm:text-2xl">
-                            <IconoBolsa className="size-6 text-brand-700" />
+                        <h1 className="flex items-center gap-2 text-xl font-extrabold sm:text-2xl text-ink dark:text-white">
+                            <IconoBolsa className="size-6 text-brand-700 dark:text-brand" />
                             Resumen de compra
                         </h1>
-                        <ul className="mt-4 divide-y divide-slate-100">
+                        <ul className="mt-4 divide-y divide-slate-100 dark:divide-neutral-800">
                             {carrito.items.map((item) => {
                                 const problema = problemaStock(item)
                                 return (
@@ -63,11 +63,11 @@ export function Carrito() {
                                             <div className="min-w-0 flex-1">
                                                 <div className="flex items-start justify-between gap-2">
                                                     <div className="min-w-0">
-                                                        <Link to={`/producto/${item.producto.id}`} className="block truncate text-sm font-bold uppercase hover:underline">{item.producto.plataforma.nombre}</Link>
-                                                        <p className="text-xs text-slate-500">{etiquetaTipo[item.producto.tipo]} · {duracion(item.producto.duracionDias)}</p>
-                                                        <p className="text-sm font-semibold text-brand-700">{precio(item.producto.precio)}</p>
+                                                        <Link to={`/producto/${item.producto.id}`} className="block truncate text-sm font-bold uppercase hover:underline text-ink dark:text-white">{item.producto.plataforma.nombre}</Link>
+                                                        <p className="text-xs text-slate-500 dark:text-neutral-400">{etiquetaTipo[item.producto.tipo]} · {duracion(item.producto.duracionDias)}</p>
+                                                        <p className="text-sm font-semibold text-brand-700 dark:text-brand">{precio(item.producto.precio)}</p>
                                                     </div>
-                                                    <button type="button" aria-label={`Quitar ${item.producto.plataforma.nombre}`} onClick={() => ejecutar(item.id, () => eliminar(item.id))} disabled={ocupado !== null} className="rounded-lg p-2 text-slate-400 transition-colors hover:bg-red-50 hover:text-red-600 disabled:opacity-40">
+                                                    <button type="button" aria-label={`Quitar ${item.producto.plataforma.nombre}`} onClick={() => ejecutar(item.id, () => eliminar(item.id))} disabled={ocupado !== null} className="rounded-lg p-2 text-slate-400 transition-colors hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950/30 disabled:opacity-40">
                                                         <IconoBasura className="size-4" />
                                                     </button>
                                                 </div>
@@ -78,7 +78,7 @@ export function Carrito() {
                                                         deshabilitado={ocupado !== null}
                                                         onCambio={(valor) => ejecutar(item.id, () => actualizar(item.id, valor))}
                                                     />
-                                                    <p className="text-sm font-bold">{precio(item.subtotal)}</p>
+                                                    <p className="text-sm font-bold text-ink dark:text-white">{precio(item.subtotal)}</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -102,19 +102,19 @@ export function Carrito() {
                         </Boton>
                     </section>
                     <aside className="space-y-4 lg:sticky lg:top-24 lg:self-start">
-                        <div className="rounded-2xl bg-slate-50 p-5">
+                        <div className="rounded-2xl bg-slate-50 dark:bg-neutral-800 p-5">
                             <div className="flex items-center justify-between gap-3">
-                                <p className="font-semibold text-slate-700">Total del pedido</p>
-                                <p className="text-2xl font-extrabold text-brand-700">{precio(carrito.total)}</p>
+                                <p className="font-semibold text-slate-700 dark:text-neutral-200">Total del pedido</p>
+                                <p className="text-2xl font-extrabold text-brand-700 dark:text-brand">{precio(carrito.total)}</p>
                             </div>
-                            <p className="mt-1 text-xs text-slate-500">{contador} {contador === 1 ? "producto" : "productos"} · Precios en COP</p>
+                            <p className="mt-1 text-xs text-slate-500 dark:text-neutral-400">{contador} {contador === 1 ? "producto" : "productos"} · Precios en COP</p>
                         </div>
                         {error && <Aviso tipo="error">{error}</Aviso>}
                         {hayProblemas && <Aviso tipo="alerta">Hay productos sin stock suficiente. Ajusta tu carrito para continuar.</Aviso>}
                         <Boton className="w-full py-3.5" disabled={hayProblemas || ocupado !== null} onClick={() => navigate("/checkout")}>
                             Ir a pagar
                         </Boton>
-                        <p className="text-center text-xs text-slate-500">El stock se confirma al momento del pago.</p>
+                        <p className="text-center text-xs text-slate-500 dark:text-neutral-400">El stock se confirma al momento del pago.</p>
                     </aside>
                 </div>
             )}
