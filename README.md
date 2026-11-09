@@ -11,7 +11,7 @@ Tienda de cuentas y pantallas de streaming, IA y edición (reto StreamStore). Re
 | Variable | Uso |
 | --- | --- |
 | `VITE_API_URL` | URL base de la API (`http://localhost:3000/api`) |
-| `VITE_USE_MOCKS` | `auto` (por defecto) usa la API si `GET /health` responde y los datos de prueba si no; `true` fuerza los datos de prueba y `false` fuerza la API |
+| `VITE_USE_MOCK` | Solo `true` activa explícitamente los datos de prueba. Con `false` o sin la variable, la aplicación usa la API y avisa si el servicio no está disponible. |
 | `VITE_WHATSAPP_NUMERO` | Número del botón de soporte, con indicativo (`573000000000`) |
 
 ## Scripts
@@ -31,7 +31,7 @@ Con el backend (semilla de `PhoenixMax-Backend`):
 | Cliente | cliente1@streamstore.test | Cliente123* |
 | Cliente | cliente2@streamstore.test | Cliente123* |
 
-Con datos de prueba (backend apagado o `VITE_USE_MOCKS=true`):
+Con datos de prueba (`VITE_USE_MOCK=true`):
 
 | Rol | Correo | Contraseña |
 | --- | --- | --- |
@@ -73,7 +73,7 @@ src/
 
 El contrato está en `ContratoApi.md`. Cada archivo de `src/services/` tiene su versión real (`xxxApi`) y su versión mock; `src/services/modo.ts` decide cuál usar.
 
-En modo `auto` el front consulta `GET /health` al cargar. Si el backend no responde usa los datos de prueba y muestra el aviso "Backend apagado · datos de prueba" abajo a la izquierda. Cada 8 segundos vuelve a consultar y, si el estado cambia, recarga la página: al encender el backend desaparecen el aviso y todos los datos simulados, y la sesión de prueba se cierra sola. Las respuestas de la API se convierten a los tipos del front en `src/services/api/adaptadores.ts`:
+El front usa la API por defecto. Solo `VITE_USE_MOCK=true` activa los datos de prueba; un fallo o demora de `GET /health` nunca cambia automáticamente a mock. Si la API no está disponible se muestra un aviso claro abajo a la izquierda y el front vuelve a comprobar su disponibilidad cada 8 segundos, sin recargar la página. Las respuestas de la API se convierten a los tipos del front en `src/services/api/adaptadores.ts`:
 
 - Respuestas `{ message, data }` y errores `{ error, errors }`; los `errors` por campo se muestran junto al mensaje.
 - El dinero llega como string y se convierte a número.
