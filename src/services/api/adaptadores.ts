@@ -240,8 +240,6 @@ export function aCompra(dto: CompraDto, plataformas: Plataforma[]): Compra {
     }))
     return {
         id: dto.id,
-        productoId: dto.productoId ?? 0,
-        puedeRenovarse: dto.puedeRenovarse ?? true,
         usuarioId: dto.usuarioId ?? dto.usuario?.id ?? 0,
         usuarioNombre: dto.usuario?.nombre ?? dto.usuario?.email ?? "",
         total: dinero(dto.total),
@@ -256,6 +254,8 @@ export function aCompra(dto: CompraDto, plataformas: Plataforma[]): Compra {
 export function aServicio(dto: ServicioDto, plataformas: Plataforma[]): Servicio {
     return {
         id: dto.id,
+        productoId: dto.productoId ?? 0,
+        puedeRenovarse: dto.puedeRenovarse ?? true,
         compraId: dto.compraId ?? 0,
         plataforma: aPlataforma(dto.plataforma, plataformas),
         tipo: dto.tipo,
