@@ -5,7 +5,7 @@ import { Aviso, Boton, Campo, Cargando, Insignia, Vacio } from "../components/ui
 import { useAuth } from "../context/AuthContext"
 import { useCart } from "../context/CartContext"
 import { useCarga } from "../hooks/useCarga"
-import { duracion, estadoServicio, etiquetaEstadoCompra, etiquetaTipo, formatoFecha, formatoFechaHora, iniciales, precio } from "../lib/formato"
+import { duracion, estadoServicio, etiquetaEstadoCompra, etiquetaTipo, formatoFechaHora, iniciales, precio } from "../lib/formato"
 import { authService } from "../services/authService"
 import { comprasService } from "../services/comprasService"
 import { mensajeError } from "../services/http"
@@ -90,6 +90,11 @@ function MisCompras() {
                             </div>
                         </summary>
                         <div className="border-t border-slate-100 dark:border-neutral-800 px-4 pb-4">
+                            <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-xl bg-slate-50 px-3 py-2.5 text-xs dark:bg-neutral-800">
+                                <div><span className="text-slate-500 dark:text-neutral-400">Comprobante</span><p className="mt-0.5 font-bold text-ink dark:text-white">PM-{String(compra.id).padStart(6, "0")}</p></div>
+                                <div><span className="text-slate-500 dark:text-neutral-400">Método</span><p className="mt-0.5 font-bold capitalize text-ink dark:text-white">{compra.metodoPago || "Pendiente"}</p></div>
+                                <button type="button" onClick={() => window.print()} className="font-bold text-brand-700 underline dark:text-brand">Imprimir comprobante</button>
+                            </div>
                             <table className="mt-3 w-full text-left text-sm">
                                 <thead className="text-xs text-slate-500 dark:text-neutral-400">
                                     <tr>
@@ -113,7 +118,11 @@ function MisCompras() {
                                     ))}
                                 </tbody>
                             </table>
-                            {compra.pagadaAt && <p className="mt-3 text-xs text-slate-500 dark:text-neutral-400">Pagada el {formatoFecha(compra.pagadaAt)}</p>}
+                            <div className="mt-3 flex items-center justify-between border-t border-slate-100 pt-3 text-sm dark:border-neutral-800">
+                                <span className="font-semibold text-slate-600 dark:text-neutral-300">Total pagado</span>
+                                <span className="font-extrabold text-ink dark:text-white">{precio(compra.total)}</span>
+                            </div>
+                            {compra.pagadaAt && <p className="mt-3 text-xs text-slate-500 dark:text-neutral-400">Pago confirmado el {formatoFechaHora(compra.pagadaAt)}. Tus accesos están disponibles en Mis servicios.</p>}
                         </div>
                     </details>
                 </li>

@@ -15,6 +15,10 @@ const metodos = [
     { id: "nequi", nombre: "Nequi", detalle: "Pago simulado · confirmación automática" }
 ]
 
+function nombreMetodo(id: string) {
+    return metodos.find((metodo) => metodo.id === id)?.nombre ?? id
+}
+
 interface LineaResumen {
     id: number
     producto: Producto
@@ -95,6 +99,10 @@ export function Checkout() {
                     Gracias, {usuario?.nombre.split(" ")[0]}. Tu pedido #{compra.id} fue pagado y tus accesos ya están disponibles.
                 </p>
                 <div className="mt-6 text-left">
+                    <div className="mb-4 grid grid-cols-2 gap-3 rounded-2xl bg-slate-50 p-4 text-xs dark:bg-neutral-800">
+                        <div><p className="text-slate-500 dark:text-neutral-400">Comprobante</p><p className="mt-1 font-bold text-ink dark:text-white">#{compra.id}</p></div>
+                        <div><p className="text-slate-500 dark:text-neutral-400">Método de pago</p><p className="mt-1 font-bold text-ink dark:text-white">{nombreMetodo(compra.metodoPago)}</p></div>
+                    </div>
                     <Resumen
                         total={compra.total}
                         lineas={compra.items}
@@ -104,6 +112,7 @@ export function Checkout() {
                     <Link to="/perfil" className="rounded-lg bg-ink px-5 py-3 text-sm font-bold text-white hover:bg-neutral-800 dark:bg-brand dark:text-ink">Ver mis servicios</Link>
                     <Link to="/catalogo" className="rounded-lg border border-slate-300 px-5 py-3 text-sm font-bold hover:bg-slate-50 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-800">Seguir comprando</Link>
                 </div>
+                <p className="mt-5 text-xs text-slate-500 dark:text-neutral-400">Conserva el número de pedido como comprobante de tu compra.</p>
             </div>
         )
     }
@@ -159,6 +168,7 @@ export function Checkout() {
                         <Boton className="w-full py-3.5" cargando={procesando} onClick={confirmar}>Confirmar pedido</Boton>
                     )}
                     <p className="text-center text-xs text-slate-500 dark:text-neutral-400">Pago simulado para la demo. No se realizan cobros reales.</p>
+                    <div className="border-t border-slate-100 pt-3 text-center text-xs text-slate-500 dark:border-neutral-800 dark:text-neutral-400">Tus credenciales se asignan únicamente cuando el pago es aprobado.</div>
                 </aside>
             </div>
         </div>

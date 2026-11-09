@@ -50,10 +50,16 @@ export function Carrito() {
             ) : (
                 <div className="grid gap-6 rounded-3xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6 lg:grid-cols-[1fr_22rem] dark:border-neutral-800 dark:bg-neutral-900">
                     <section>
-                        <h1 className="flex items-center gap-2 text-xl font-extrabold sm:text-2xl text-ink dark:text-white">
-                            <IconoBolsa className="size-6 text-brand-700 dark:text-brand" />
-                            Resumen de compra
-                        </h1>
+                        <div className="flex flex-wrap items-start justify-between gap-3">
+                            <div>
+                                <h1 className="flex items-center gap-2 text-xl font-extrabold sm:text-2xl text-ink dark:text-white">
+                                    <IconoBolsa className="size-6 text-brand-700 dark:text-brand" />
+                                    Resumen de compra
+                                </h1>
+                                <p className="mt-1 text-sm text-slate-500 dark:text-neutral-400">Revisa tus servicios antes de continuar al pago.</p>
+                            </div>
+                            <span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300">Stock actualizado</span>
+                        </div>
                         <ul className="mt-4 divide-y divide-slate-100 dark:divide-neutral-800">
                             {carrito.items.map((item) => {
                                 const problema = problemaStock(item)
@@ -110,6 +116,14 @@ export function Carrito() {
                                 <p className="text-2xl font-extrabold text-brand-700 dark:text-brand">{precio(carrito.total)}</p>
                             </div>
                             <p className="mt-1 text-xs text-slate-500 dark:text-neutral-400">{contador} {contador === 1 ? "producto" : "productos"} · Precios en COP</p>
+                            <div className="mt-4 border-t border-slate-200 pt-3 text-xs text-slate-500 dark:border-neutral-700 dark:text-neutral-400">
+                                <div className="flex justify-between"><span>Subtotal de servicios</span><span>{precio(carrito.total)}</span></div>
+                                <div className="mt-1 flex justify-between"><span>Costos adicionales</span><span className="font-semibold text-emerald-700 dark:text-emerald-400">$ 0</span></div>
+                            </div>
+                        </div>
+                        <div className="rounded-2xl border border-slate-200 p-4 text-xs text-slate-600 dark:border-neutral-800 dark:text-neutral-300">
+                            <p className="font-bold text-ink dark:text-white">Compra protegida</p>
+                            <p className="mt-1 leading-relaxed">El pago se confirma antes de asignar credenciales. Recibirás tus accesos en Mis servicios.</p>
                         </div>
                         {error && <Aviso tipo="error">{error}</Aviso>}
                         {hayProblemas && <Aviso tipo="alerta">Hay productos sin stock suficiente. Ajusta tu carrito para continuar.</Aviso>}
