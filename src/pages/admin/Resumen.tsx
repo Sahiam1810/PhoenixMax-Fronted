@@ -26,12 +26,9 @@ export function Resumen() {
         setMensaje(null)
         try {
             const respuesta = await adminService.ejecutarCron()
-            const { enviados, whatsappEnviados, vencidos, errores } = respuesta.data
-            const parteWhatsapp = (whatsappEnviados && whatsappEnviados > 0)
-                ? ` y ${whatsappEnviados} por WhatsApp`
-                : ""
-            const detalle = `Correos enviados: ${enviados}${parteWhatsapp}. Servicios marcados como vencidos: ${vencidos}.`
-            const fallidos = errores > 0 ? ` ${errores} notificaciones no se pudieron enviar, revisa la configuración de correo/WhatsApp del servidor.` : ""
+            const { enviados, vencidos, errores } = respuesta.data
+            const detalle = `Correos enviados: ${enviados}. Servicios marcados como vencidos: ${vencidos}.`
+            const fallidos = errores > 0 ? ` ${errores} correos no se pudieron enviar, revisa la configuración de correo del servidor.` : ""
             setMensaje({ tipo: errores > 0 ? "error" : "exito", texto: `${respuesta.message}. ${detalle}${fallidos}` })
         } catch (fallo) {
             setMensaje({ tipo: "error", texto: mensajeError(fallo) })
