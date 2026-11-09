@@ -47,10 +47,7 @@ interface CronDto {
 }
 
 async function plataformasAdmin(): Promise<Plataforma[]> {
-    const respuesta = await todas<PlataformaDto>("/admin/plataformas").catch((error: unknown) => {
-        if (error instanceof ApiError && error.status === 501) return todas<PlataformaDto>("/plataformas")
-        throw error
-    })
+    const respuesta = await todas<PlataformaDto>("/admin/plataformas")
     return respuesta.data.map((item) => aPlataforma(item))
 }
 
@@ -91,10 +88,7 @@ const adminApi: AdminService = {
         return { message: respuesta.message, data: aPlataforma(respuesta.data) }
     },
     productos: () => conPlataformas(
-        todas<ProductoDto>("/admin/productos").catch((error: unknown) => {
-            if (error instanceof ApiError && error.status === 501) return { message: "", data: [] as ProductoDto[] }
-            throw error
-        }),
+        todas<ProductoDto>("/admin/productos"),
         (data, plataformas) => data.map((item) => aProducto(item, plataformas))
     ),
     crearProducto: (input) => conPlataformas(

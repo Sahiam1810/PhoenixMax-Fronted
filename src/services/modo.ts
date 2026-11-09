@@ -1,12 +1,12 @@
 export type Modo = "api" | "mock"
 
 const baseUrl = import.meta.env.VITE_API_URL ?? "http://localhost:3000/api"
-const configurado = import.meta.env.VITE_USE_MOCKS
-const forzado: Modo | null = configurado === "true" ? "mock" : configurado === "false" ? "api" : null
+const forzado = import.meta.env.VITE_USE_MOCK === "true"
 const INTERVALO = 8000
 const ESPERA = 1500
 
-let modo: Modo = forzado ?? "mock"
+let modo: Modo = forzado ? "mock" : "api"
+let servicioDisponible: boolean | null = null
 let revisando = false
 
 export function modoActual(): Modo {
@@ -14,7 +14,17 @@ export function modoActual(): Modo {
 }
 
 export function modoForzado() {
-    return forzado !== null
+    return forzado
+}
+
+export function apiDisponible() {
+    return servicioDisponible
+}
+
+function actualizarDisponibilidad(disponible: boolean) {
+    if (servicioDisponible === disponible) return
+    servicioDisponible = disponible
+    window.dispatchEvent(new Event("phoenixmax:estado-servicio"))
 }
 
 async function backendDisponible() {
@@ -32,7 +42,7 @@ async function backendDisponible() {
 
 export async function detectarModo() {
     if (forzado) return modo
-    modo = (await backendDisponible()) ? "api" : "mock"
+    actualizarDisponibilidad(await backendDisponible())
     return modo
 }
 
@@ -40,8 +50,7 @@ export async function revisarModo() {
     if (forzado || revisando) return
     revisando = true
     try {
-        const siguiente: Modo = (await backendDisponible()) ? "api" : "mock"
-        if (siguiente !== modo) window.location.reload()
+        actualizarDisponibilidad(await backendDisponible())
     } finally {
         revisando = false
     }
