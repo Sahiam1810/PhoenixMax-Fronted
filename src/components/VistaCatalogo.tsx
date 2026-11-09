@@ -93,6 +93,7 @@ export function VistaCatalogo() {
                     {!productos.cargando && <p className="text-sm text-slate-500 dark:text-neutral-400 sm:ml-auto">{lista.length} productos</p>}
                 </div>
             </div>
+            {plataformas.error && <Aviso tipo="error">{plataformas.error}</Aviso>}
             {productos.cargando && !productos.data && <Cargando texto="Cargando productos..." />}
             {productos.error && <Aviso tipo="error">{productos.error}</Aviso>}
             {!productos.cargando && !productos.error && lista.length === 0 && (

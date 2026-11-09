@@ -1,9 +1,7 @@
 import type { ApiResponse, Compra } from "../types"
-import { comprasMock } from "../mocks/servicios/comprasMock"
 import { aCompra, type CompraDto } from "./api/adaptadores"
 import { plataformasConocidas } from "./api/plataformasConocidas"
 import { cuerpo, request, todas } from "./http"
-import { elegir } from "./modo"
 
 export interface ComprasService {
     crear: () => Promise<ApiResponse<Compra>>
@@ -27,4 +25,4 @@ const comprasApi: ComprasService = {
     obtener: (id) => compra(`/compras/${id}`)
 }
 
-export const comprasService: ComprasService = elegir(comprasMock, comprasApi)
+export const comprasService: ComprasService = comprasApi

@@ -1,9 +1,7 @@
 import type { ApiResponse, Servicio } from "../types"
-import { serviciosMock } from "../mocks/servicios/serviciosMock"
 import { aServicio, type ServicioDto } from "./api/adaptadores"
 import { plataformasConocidas } from "./api/plataformasConocidas"
 import { request } from "./http"
-import { elegir } from "./modo"
 
 export interface ServiciosService {
     mios: () => Promise<ApiResponse<Servicio[]>>
@@ -16,4 +14,4 @@ const serviciosApi: ServiciosService = {
     }
 }
 
-export const serviciosService: ServiciosService = elegir(serviciosMock, serviciosApi)
+export const serviciosService: ServiciosService = serviciosApi

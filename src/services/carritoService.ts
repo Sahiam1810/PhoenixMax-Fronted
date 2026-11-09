@@ -1,9 +1,7 @@
 import type { ApiResponse, Carrito } from "../types"
-import { carritoMock } from "../mocks/servicios/carritoMock"
 import { aCarrito, type CarritoDto } from "./api/adaptadores"
 import { plataformasConocidas } from "./api/plataformasConocidas"
 import { cuerpo, request } from "./http"
-import { elegir } from "./modo"
 
 export interface CarritoService {
     obtener: () => Promise<ApiResponse<Carrito>>
@@ -26,4 +24,4 @@ const carritoApi: CarritoService = {
     vaciar: () => carrito("/carrito", { method: "DELETE" })
 }
 
-export const carritoService: CarritoService = elegir(carritoMock, carritoApi)
+export const carritoService: CarritoService = carritoApi

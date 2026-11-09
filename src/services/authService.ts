@@ -1,8 +1,6 @@
 import type { ApiResponse, AuthResult, LoginInput, PerfilInput, RegisterInput, Usuario } from "../types"
-import { authMock } from "../mocks/servicios/authMock"
 import { aUsuario, type UsuarioDto } from "./api/adaptadores"
 import { cuerpo, request } from "./http"
-import { elegir } from "./modo"
 
 export interface AuthService {
     register: (input: RegisterInput) => Promise<ApiResponse<AuthResult>>
@@ -38,4 +36,4 @@ const authApi: AuthService = {
     }
 }
 
-export const authService: AuthService = elegir(authMock, authApi)
+export const authService: AuthService = authApi

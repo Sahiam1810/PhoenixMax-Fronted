@@ -1,7 +1,6 @@
 import type { ApiResponse, Plataforma } from "../types"
-import { plataformasMock } from "../mocks/servicios/plataformasMock"
-import { plataformasConocidas } from "./api/plataformasConocidas"
-import { elegir } from "./modo"
+import { aPlataforma, type PlataformaDto } from "./api/adaptadores"
+import { todas } from "./http"
 
 export interface PlataformasService {
     listar: () => Promise<ApiResponse<Plataforma[]>>
@@ -9,9 +8,9 @@ export interface PlataformasService {
 
 const plataformasApi: PlataformasService = {
     listar: async () => {
-        const plataformas = await plataformasConocidas()
-        return { message: "Plataformas obtenidas", data: plataformas.filter((item) => item.activo) }
+        const respuesta = await todas<PlataformaDto>("/plataformas")
+        return { message: respuesta.message, data: respuesta.data.map((item) => aPlataforma(item)).filter((item) => item.activo) }
     }
 }
 
-export const plataformasService: PlataformasService = elegir(plataformasMock, plataformasApi)
+export const plataformasService: PlataformasService = plataformasApi

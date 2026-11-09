@@ -1,13 +1,10 @@
 import type { ApiResponse, Compra, ComprasFiltro, Cuenta, CuentaInput, CuentasFiltro, Plataforma, PlataformaInput, Producto, ProductoInput, Resumen, Usuario, UsuarioInput, UsuariosFiltro } from "../types"
-import { adminMock } from "../mocks/servicios/adminMock"
 import { aCompra, aCuenta, aPlataforma, aProducto, aUsuario, dinero, type CompraDto, type CuentaDto, type Dinero, type PlataformaDto, type ProductoDto, type UsuarioDto } from "./api/adaptadores"
 import { olvidarPlataformas } from "./api/plataformasConocidas"
 import { ApiError, cuerpo, request, todas } from "./http"
-import { elegir } from "./modo"
 
 export interface ResultadoCron {
     enviados: number
-    whatsappEnviados?: number
     vencidos: number
     errores: number
 }
@@ -41,7 +38,6 @@ interface ResumenDto {
 
 interface CronDto {
     notificacionesEnviadas?: number
-    whatsappEnviados?: number
     serviciosVencidos?: number
     errores?: number
 }
@@ -144,7 +140,6 @@ const adminApi: AdminService = {
             message: respuesta.message,
             data: {
                 enviados: respuesta.data.notificacionesEnviadas ?? 0,
-                whatsappEnviados: respuesta.data.whatsappEnviados ?? 0,
                 vencidos: respuesta.data.serviciosVencidos ?? 0,
                 errores: respuesta.data.errores ?? 0
             }
@@ -152,4 +147,4 @@ const adminApi: AdminService = {
     }
 }
 
-export const adminService: AdminService = elegir(adminMock, adminApi)
+export const adminService: AdminService = adminApi

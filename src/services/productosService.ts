@@ -1,9 +1,7 @@
 import type { ApiResponse, Producto, ProductosFiltro } from "../types"
-import { productosMock } from "../mocks/servicios/productosMock"
 import { aProducto, type ProductoDto } from "./api/adaptadores"
 import { plataformasConocidas } from "./api/plataformasConocidas"
 import { request, todas } from "./http"
-import { elegir } from "./modo"
 
 export interface ProductosService {
     listar: (filtro?: ProductosFiltro) => Promise<ApiResponse<Producto[]>>
@@ -27,4 +25,4 @@ const productosApi: ProductosService = {
     }
 }
 
-export const productosService: ProductosService = elegir(productosMock, productosApi)
+export const productosService: ProductosService = productosApi

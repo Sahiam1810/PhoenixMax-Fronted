@@ -1,5 +1,4 @@
 import type { ApiErrorBody, ApiResponse, Paginado } from "../types"
-import { revisarModo } from "./modo"
 
 const baseUrl = import.meta.env.VITE_API_URL ?? "http://localhost:3000/api"
 
@@ -51,7 +50,6 @@ export async function request<T>(path: string, options: RequestInit = {}): Promi
     try {
         response = await fetch(`${baseUrl}${path}`, { ...options, headers })
     } catch {
-        revisarModo()
         throw new ApiError("No se pudo conectar con el servidor. Revisa que el backend esté encendido.", 0)
     }
     const payload: unknown = await response.json().catch(() => null)
