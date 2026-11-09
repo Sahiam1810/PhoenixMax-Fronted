@@ -25,7 +25,7 @@ function FormProducto({ plataformas, onCreado }: { plataformas: Plataforma[], on
         setError("")
         try {
             const respuesta = await adminService.crearProducto(form)
-            onCreado(`${respuesta.message}: ${respuesta.data.plataforma.nombre} · ${etiquetaTipo[respuesta.data.tipo]}`)
+            onCreado(`${respuesta.message}: ${respuesta.data.plataforma.nombre} · ${etiquetaTipo[respuesta.data.tipo]}. El stock depende de las cuentas cargadas en Inventario.`)
         } catch (fallo) {
             setError(mensajeError(fallo))
         } finally {
@@ -108,11 +108,12 @@ export function Productos() {
         <div>
             <EncabezadoAdmin
                 titulo="Productos"
-                descripcion="Precios, duración y visibilidad en el catálogo"
+                descripcion="Un producto define precio y duración; el stock proviene de las cuentas y pantallas cargadas en Inventario."
                 acciones={<Boton onClick={() => setFormAbierto((valor) => !valor)}>{formAbierto ? "Cancelar" : "Nuevo producto"}</Boton>}
             />
             {formAbierto && plataformas.data && (
                 <Panel titulo="Nuevo producto" onCerrar={() => setFormAbierto(false)}>
+                    <p className="mb-4 text-sm text-slate-600 dark:text-neutral-300">Crear un producto no crea credenciales ni stock. Para venderlo, carga cuentas de esa plataforma en Inventario.</p>
                     <FormProducto plataformas={plataformas.data} onCreado={(texto) => {
                         setFormAbierto(false)
                         notificar(texto, "exito")

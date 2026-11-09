@@ -136,7 +136,7 @@ export function Inventario() {
         <div>
             <EncabezadoAdmin
                 titulo="Inventario"
-                descripcion="Cuentas cargadas y sus pantallas. Agrega cuentas para subir el stock o desactívalas para retirarlo."
+                descripcion="Credenciales reales del inventario. Son independientes de los productos: una cuenta vendida o sin producto activo no aparece como disponible en el catálogo."
                 acciones={<Boton onClick={() => setFormAbierto((valor) => !valor)}>{formAbierto ? "Cancelar" : "Agregar cuenta"}</Boton>}
             />
             {formAbierto && plataformas.data && (
