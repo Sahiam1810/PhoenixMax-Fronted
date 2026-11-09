@@ -31,7 +31,7 @@ function Dato({ etiqueta, valor }: { etiqueta: string, valor: string }) {
     )
 }
 
-export function ServiceCard({ servicio }: { servicio: Servicio }) {
+export function ServiceCard({ servicio, enCarrito = false, alRenovar }: { servicio: Servicio, enCarrito?: boolean, alRenovar?: () => void }) {
     const [verClave, setVerClave] = useState(false)
     const [copiado, setCopiado] = useState(false)
     const estado = estadoServicio(servicio)
@@ -89,10 +89,15 @@ export function ServiceCard({ servicio }: { servicio: Servicio }) {
                         <p>Vence: <span className="font-semibold text-ink dark:text-white">{formatoFecha(servicio.fechaVencimiento)}</span></p>
                         <p className={`font-semibold ${estado === "activo" ? "text-emerald-700 dark:text-emerald-400" : estado === "por_vencer" ? "text-amber-700 dark:text-amber-400" : "text-red-600 dark:text-red-400"}`}>{textoDias(dias)}</p>
                     </div>
+                    <div className="flex flex-wrap gap-2">
                     {conCredenciales && <button type="button" onClick={copiar} className="inline-flex items-center gap-2 rounded-lg border border-slate-300 dark:border-neutral-700 px-3 py-2 font-semibold text-ink dark:text-white transition-colors hover:bg-slate-50 dark:hover:bg-neutral-800">
                         {copiado ? <IconoCheck className="size-4 text-emerald-600 dark:text-emerald-400" /> : <IconoCopiar className="size-4" />}
                         {copiado ? "Copiado" : "Copiar credenciales"}
                     </button>}
+                    {alRenovar && <button type="button" onClick={alRenovar} disabled={enCarrito || !servicio.puedeRenovarse} className={`rounded-lg px-3 py-2 font-bold transition-colors disabled:cursor-not-allowed disabled:opacity-55 ${estado === "activo" ? "border border-brand-300 text-brand-700 hover:bg-brand-50" : "bg-brand-700 text-white hover:bg-brand-800"}`}>
+                        {enCarrito ? "En el carrito" : "Renovar"}
+                    </button>}
+                    </div>
                 </div>
             </div>
         </article>

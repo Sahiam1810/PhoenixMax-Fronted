@@ -8,6 +8,7 @@ import { mensajeError } from "../services/http"
 import type { CarritoItem } from "../types"
 
 function problemaStock(item: CarritoItem) {
+    if (item.esRenovacion) return ""
     if (item.producto.stock === 0) return "Este producto se agotó. Quítalo para continuar."
     if (item.cantidad > item.producto.stock) return `Solo quedan ${item.producto.stock} unidades. Ajusta la cantidad.`
     return ""
@@ -63,7 +64,8 @@ export function Carrito() {
                                             <div className="min-w-0 flex-1">
                                                 <div className="flex items-start justify-between gap-2">
                                                     <div className="min-w-0">
-                                                        <Link to={`/producto/${item.producto.id}`} className="block truncate text-sm font-bold uppercase hover:underline text-ink dark:text-white">{item.producto.plataforma.nombre}</Link>
+                                                        {item.esRenovacion && <p className="block truncate text-sm font-bold uppercase text-ink dark:text-white">Renovación · {item.producto.plataforma.nombre} · {item.servicio?.nombrePerfil ?? item.servicio?.emailAcceso ?? etiquetaTipo[item.producto.tipo]}</p>}
+                                                        {!item.esRenovacion && <Link to={`/producto/${item.producto.id}`} className="block truncate text-sm font-bold uppercase hover:underline text-ink dark:text-white">{item.producto.plataforma.nombre}</Link>}
                                                         <p className="text-xs text-slate-500 dark:text-neutral-400">{etiquetaTipo[item.producto.tipo]} · {duracion(item.producto.duracionDias)}</p>
                                                         <p className="text-sm font-semibold text-brand-700 dark:text-brand">{precio(item.producto.precio)}</p>
                                                     </div>
@@ -72,12 +74,12 @@ export function Carrito() {
                                                     </button>
                                                 </div>
                                                 <div className="mt-2 flex items-center justify-between gap-2">
-                                                    <SelectorCantidad
+                                                    {!item.esRenovacion && <SelectorCantidad
                                                         valor={item.cantidad}
                                                         maximo={Math.max(item.producto.stock, 1)}
                                                         deshabilitado={ocupado !== null}
                                                         onCambio={(valor) => ejecutar(item.id, () => actualizar(item.id, valor))}
-                                                    />
+                                                    />}
                                                     <p className="text-sm font-bold text-ink dark:text-white">{precio(item.subtotal)}</p>
                                                 </div>
                                             </div>

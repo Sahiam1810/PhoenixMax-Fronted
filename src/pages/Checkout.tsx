@@ -20,6 +20,7 @@ interface LineaResumen {
     producto: Producto
     cantidad: number
     subtotal: number
+    esRenovacion?: boolean
 }
 
 function Resumen({ lineas, total }: { lineas: LineaResumen[], total: number }) {
@@ -30,7 +31,7 @@ function Resumen({ lineas, total }: { lineas: LineaResumen[], total: number }) {
                     <li key={linea.id} className="flex items-center gap-3 py-3">
                         <LogoPlataforma plataforma={linea.producto.plataforma} tamano="mini" className="size-12 shrink-0 rounded-lg" />
                         <div className="min-w-0 flex-1">
-                            <p className="truncate text-sm font-bold">{linea.producto.plataforma.nombre}</p>
+                            <p className="truncate text-sm font-bold">{linea.esRenovacion ? `Renovación · ${linea.producto.plataforma.nombre}` : linea.producto.plataforma.nombre}</p>
                             <p className="text-xs text-slate-500">{etiquetaTipo[linea.producto.tipo]} · {duracion(linea.producto.duracionDias)} · x{linea.cantidad}</p>
                         </div>
                         <p className="text-sm font-semibold">{precio(linea.subtotal)}</p>

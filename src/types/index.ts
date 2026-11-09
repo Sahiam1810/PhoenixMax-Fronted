@@ -44,6 +44,9 @@ export interface CarritoItem {
     producto: Producto
     cantidad: number
     subtotal: number
+    servicioId: number | null
+    esRenovacion: boolean
+    servicio: { id: number, emailAcceso: string | null, nombrePerfil: string | null } | null
 }
 
 export interface Carrito {
@@ -57,6 +60,8 @@ export interface CompraItem {
     cantidad: number
     precioUnitario: number
     subtotal: number
+    servicioRenovadoId: number | null
+    esRenovacion: boolean
 }
 
 export interface Compra {
@@ -73,6 +78,8 @@ export interface Compra {
 
 export interface Servicio {
     id: number
+    productoId: number
+    puedeRenovarse: boolean
     compraId: number
     plataforma: Plataforma
     tipo: TipoProducto
