@@ -7,7 +7,7 @@ import { elegir } from "./modo"
 
 export interface CarritoService {
     obtener: () => Promise<ApiResponse<Carrito>>
-    agregar: (productoId: number, cantidad: number) => Promise<ApiResponse<Carrito>>
+    agregar: (productoId: number, cantidad: number, servicioId?: number) => Promise<ApiResponse<Carrito>>
     actualizar: (itemId: number, cantidad: number) => Promise<ApiResponse<Carrito>>
     eliminar: (itemId: number) => Promise<ApiResponse<Carrito>>
     vaciar: () => Promise<ApiResponse<Carrito>>
@@ -20,7 +20,7 @@ async function carrito(path: string, options: RequestInit = {}): Promise<ApiResp
 
 const carritoApi: CarritoService = {
     obtener: () => carrito("/carrito"),
-    agregar: (productoId, cantidad) => carrito("/carrito", { method: "POST", ...cuerpo({ productoId, cantidad }) }),
+    agregar: (productoId, cantidad, servicioId) => carrito("/carrito", { method: "POST", ...cuerpo({ productoId, cantidad, servicioId }) }),
     actualizar: (itemId, cantidad) => carrito(`/carrito/${itemId}`, { method: "PATCH", ...cuerpo({ cantidad }) }),
     eliminar: (itemId) => carrito(`/carrito/${itemId}`, { method: "DELETE" }),
     vaciar: () => carrito("/carrito", { method: "DELETE" })

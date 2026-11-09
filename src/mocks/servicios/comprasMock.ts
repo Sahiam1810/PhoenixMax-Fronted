@@ -24,6 +24,7 @@ export const comprasMock: ComprasService = {
                     id: siguienteId(base.compraItems),
                     compraId,
                     productoId: producto.id,
+                    servicioRenovadoId: linea.servicioId ?? null,
                     cantidad: linea.cantidad,
                     precioUnitario: producto.precio,
                     subtotal
@@ -49,6 +50,7 @@ export const comprasMock: ComprasService = {
             if (actual.estado !== "pendiente") fallo("Esta compra ya fue procesada", 409)
             const items = base.compraItems.filter((item) => item.compraId === id)
             items.forEach((item) => {
+                if (item.servicioRenovadoId) return
                 const producto = productoPorId(base, item.productoId)
                 const stock = stockDe(base, producto)
                 if (item.cantidad > stock) {
@@ -58,6 +60,15 @@ export const comprasMock: ComprasService = {
             const ahora = new Date()
             items.forEach((item) => {
                 const producto = productoPorId(base, item.productoId)
+                if (item.servicioRenovadoId) {
+                    const servicio = base.servicios.find((candidato) => candidato.id === item.servicioRenovadoId && candidato.usuarioId === actual.usuarioId)
+                    if (!servicio) fallo("Servicio no encontrado", 404)
+                    const baseFecha = Math.max(Date.now(), new Date(servicio.fechaVencimiento).getTime())
+                    servicio.fechaVencimiento = new Date(baseFecha + producto.duracionDias * 86400000).toISOString()
+                    servicio.estado = "activo"
+                    base.notificaciones = base.notificaciones.filter((notificacion) => notificacion.servicioId !== servicio.id)
+                    return
+                }
                 for (let unidad = 0; unidad < item.cantidad; unidad += 1) asignarUnidad(base, producto, actual.usuarioId, item.id, ahora)
             })
             actual.estado = "pagada"

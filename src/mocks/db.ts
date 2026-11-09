@@ -27,6 +27,7 @@ export interface CarritoDb {
     id: number
     usuarioId: number
     productoId: number
+    servicioId?: number | null
     cantidad: number
     createdAt: string
 }
@@ -45,6 +46,7 @@ export interface CompraItemDb {
     id: number
     compraId: number
     productoId: number
+    servicioRenovadoId?: number | null
     cantidad: number
     precioUnitario: number
     subtotal: number
@@ -222,7 +224,10 @@ export function carritoDe(base: MockDb, usuarioId: number): Carrito {
         .filter((item) => item.usuarioId === usuarioId)
         .map((item) => {
             const producto = productoCompleto(base, productoPorId(base, item.productoId))
-            return { id: item.id, producto, cantidad: item.cantidad, subtotal: producto.precio * item.cantidad }
+            const servicio = item.servicioId ? base.servicios.find((candidato) => candidato.id === item.servicioId) : null
+            const cuenta = servicio ? base.cuentas.find((candidato) => candidato.id === servicio.cuentaId) : null
+            const pantalla = servicio ? base.pantallas.find((candidato) => candidato.id === servicio.pantallaId) : null
+            return { id: item.id, producto, cantidad: item.cantidad, subtotal: producto.precio * item.cantidad, servicioId: item.servicioId ?? null, esRenovacion: item.servicioId !== undefined && item.servicioId !== null, servicio: servicio ? { id: servicio.id, emailAcceso: cuenta?.emailAcceso ?? null, nombrePerfil: pantalla?.nombrePerfil ?? null } : null }
         })
     return { items, total: items.reduce((total, item) => total + item.subtotal, 0) }
 }
@@ -239,7 +244,9 @@ export function compraCompleta(base: MockDb, compra: CompraDb): Compra {
                 producto: productoCompleto(base, productoPorId(base, item.productoId)),
                 cantidad: item.cantidad,
                 precioUnitario: item.precioUnitario,
-                subtotal: item.subtotal
+                subtotal: item.subtotal,
+                servicioRenovadoId: item.servicioRenovadoId ?? null,
+                esRenovacion: item.servicioRenovadoId !== undefined && item.servicioRenovadoId !== null
             }))
     }
 }
@@ -252,6 +259,8 @@ export function servicioCompleto(base: MockDb, servicio: ServicioDb): Servicio {
     const dias = diasRestantes(servicio.fechaVencimiento)
     return {
         id: servicio.id,
+        productoId: compraItem?.productoId ?? 0,
+        puedeRenovarse: true,
         compraId: compraItem?.compraId ?? 0,
         plataforma: plataformaDe(base, cuenta.plataformaId),
         tipo: pantalla ? "pantalla" : "cuenta",

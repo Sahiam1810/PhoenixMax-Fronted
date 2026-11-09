@@ -37,6 +37,9 @@ export interface CarritoItemDto {
     precioUnitario: Dinero
     subtotal: Dinero
     stock?: number
+    servicioId?: number | null
+    esRenovacion?: boolean
+    servicio?: { id: number, emailAcceso: string | null, nombrePerfil: string | null } | null
     producto: ProductoResumenDto
 }
 
@@ -52,6 +55,8 @@ export interface CompraItemDto {
     cantidad: number
     precioUnitario: Dinero
     subtotal: Dinero
+    servicioRenovadoId?: number | null
+    esRenovacion?: boolean
     producto: ProductoResumenDto
 }
 
@@ -69,6 +74,8 @@ export interface CompraDto {
 
 export interface ServicioDto {
     id: number
+    productoId?: number
+    puedeRenovarse?: boolean
     compraId?: number
     plataforma: PlataformaDto
     tipo: TipoProducto
@@ -212,7 +219,10 @@ export function aCarrito(dto: CarritoDto, plataformas: Plataforma[]): Carrito {
         id: item.id,
         producto: productoDeResumen(item.productoId, item.producto, item.precioUnitario, item.stock ?? 0, plataformas),
         cantidad: item.cantidad,
-        subtotal: dinero(item.subtotal)
+        subtotal: dinero(item.subtotal),
+        servicioId: item.servicioId ?? null,
+        esRenovacion: item.esRenovacion ?? (item.servicioId !== undefined && item.servicioId !== null),
+        servicio: item.servicio ?? null
     }))
     return { items, total: dinero(dto.total) }
 }
@@ -225,9 +235,13 @@ export function aCompra(dto: CompraDto, plataformas: Plataforma[]): Compra {
         cantidad: item.cantidad,
         precioUnitario: dinero(item.precioUnitario),
         subtotal: dinero(item.subtotal)
+        ,servicioRenovadoId: item.servicioRenovadoId ?? null
+        ,esRenovacion: item.esRenovacion ?? (item.servicioRenovadoId !== undefined && item.servicioRenovadoId !== null)
     }))
     return {
         id: dto.id,
+        productoId: dto.productoId ?? 0,
+        puedeRenovarse: dto.puedeRenovarse ?? true,
         usuarioId: dto.usuarioId ?? dto.usuario?.id ?? 0,
         usuarioNombre: dto.usuario?.nombre ?? dto.usuario?.email ?? "",
         total: dinero(dto.total),

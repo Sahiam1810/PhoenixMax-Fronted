@@ -1,15 +1,16 @@
 import { useState, type FormEvent } from "react"
-import { Link, useSearchParams } from "react-router-dom"
+import { Link, useNavigate, useSearchParams } from "react-router-dom"
 import { ServiceCard } from "../components/ServiceCard"
 import { Aviso, Boton, Campo, Cargando, Insignia, Vacio } from "../components/ui"
 import { useAuth } from "../context/AuthContext"
+import { useCart } from "../context/CartContext"
 import { useCarga } from "../hooks/useCarga"
 import { duracion, estadoServicio, etiquetaEstadoCompra, etiquetaTipo, formatoFecha, formatoFechaHora, iniciales, precio } from "../lib/formato"
 import { authService } from "../services/authService"
 import { comprasService } from "../services/comprasService"
 import { mensajeError } from "../services/http"
 import { serviciosService } from "../services/serviciosService"
-import type { EstadoCompra, EstadoVisualServicio, Usuario } from "../types"
+import type { EstadoCompra, EstadoVisualServicio, Servicio, Usuario } from "../types"
 
 type Pestana = "servicios" | "compras" | "datos"
 
@@ -25,6 +26,12 @@ const coloresCompra: Record<EstadoCompra, string> = {
 function MisServicios() {
     const { data, cargando, error } = useCarga(cargarServicios)
     const [filtro, setFiltro] = useState<EstadoVisualServicio | "todos">("todos")
+    const { carrito, agregar } = useCart()
+    const navigate = useNavigate()
+    const renovar = async (servicio: Servicio) => {
+        await agregar(servicio.productoId, 1, servicio.id)
+        navigate("/carrito")
+    }
     if (cargando) return <Cargando texto="Cargando tus servicios..." />
     if (error) return <Aviso tipo="error">{error}</Aviso>
     const servicios = data ?? []
@@ -54,7 +61,7 @@ function MisServicios() {
                 ))}
             </div>
             <div className="grid gap-4 md:grid-cols-2">
-                {visibles.map((servicio) => <ServiceCard key={servicio.id} servicio={servicio} />)}
+                {visibles.map((servicio) => <ServiceCard key={servicio.id} servicio={servicio} enCarrito={carrito.items.some((item) => item.servicioId === servicio.id)} alRenovar={() => void renovar(servicio)} />)}
             </div>
         </div>
     )

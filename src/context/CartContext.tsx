@@ -8,7 +8,7 @@ interface CartContextValue {
     contador: number
     cargando: boolean
     recargar: () => Promise<void>
-    agregar: (productoId: number, cantidad: number) => Promise<string>
+    agregar: (productoId: number, cantidad: number, servicioId?: number) => Promise<string>
     actualizar: (itemId: number, cantidad: number) => Promise<string>
     eliminar: (itemId: number) => Promise<string>
     vaciar: () => Promise<string>
@@ -53,7 +53,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         contador: carrito.items.reduce((total, item) => total + item.cantidad, 0),
         cargando,
         recargar,
-        agregar: (productoId, cantidad) => aplicar(carritoService.agregar(productoId, cantidad)),
+        agregar: (productoId, cantidad, servicioId) => aplicar(carritoService.agregar(productoId, cantidad, servicioId)),
         actualizar: (itemId, cantidad) => aplicar(carritoService.actualizar(itemId, cantidad)),
         eliminar: (itemId) => aplicar(carritoService.eliminar(itemId)),
         vaciar: () => aplicar(carritoService.vaciar())

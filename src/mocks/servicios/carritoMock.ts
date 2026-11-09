@@ -20,10 +20,20 @@ export const carritoMock: CarritoService = {
         const usuario = usuarioSesion()
         return ok(carritoDe(db(), usuario.id))
     },
-    agregar: async (productoId, cantidad) => {
+    agregar: async (productoId, cantidad, servicioId) => {
         const carrito = transaccion((base) => {
             const usuario = usuarioSesion(base)
-            const existente = base.carrito.find((item) => item.usuarioId === usuario.id && item.productoId === productoId)
+            if (servicioId !== undefined) {
+                const servicio = base.servicios.find((item) => item.id === servicioId && item.usuarioId === usuario.id)
+                const productoOriginal = servicio ? base.compraItems.find((item) => item.id === servicio.compraItemId) : undefined
+                const producto = productoPorId(base, productoId)
+                const original = productoOriginal ? productoPorId(base, productoOriginal.productoId) : undefined
+                if (!servicio || !original || original.tipo !== producto.tipo || original.plataformaId !== producto.plataformaId || !producto.activo) fallo("Servicio no encontrado", 404)
+                if (base.carrito.some((item) => item.usuarioId === usuario.id && item.productoId === productoId && item.servicioId === servicioId)) fallo("Este servicio ya está en el carrito para renovación", 409)
+                base.carrito.push({ id: siguienteId(base.carrito), usuarioId: usuario.id, productoId, servicioId, cantidad: 1, createdAt: new Date().toISOString() })
+                return carritoDe(base, usuario.id)
+            }
+            const existente = base.carrito.find((item) => item.usuarioId === usuario.id && item.productoId === productoId && !item.servicioId)
             const total = (existente?.cantidad ?? 0) + cantidad
             validarCantidad(base, productoId, total)
             if (existente) existente.cantidad = total
@@ -36,6 +46,7 @@ export const carritoMock: CarritoService = {
         const carrito = transaccion((base) => {
             const usuario = usuarioSesion(base)
             const item = itemDelUsuario(base, usuario.id, itemId)
+            if (item.servicioId) fallo("La cantidad de una renovación es siempre 1", 400)
             validarCantidad(base, item.productoId, cantidad)
             item.cantidad = cantidad
             return carritoDe(base, usuario.id)
