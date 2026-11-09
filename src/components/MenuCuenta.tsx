@@ -14,9 +14,7 @@ function opcionesPara(usuario: Usuario): Opcion[] {
     if (usuario.rol === "admin") {
         return [
             { texto: "Perfil", ruta: "/perfil" },
-            { texto: "Panel de administración", ruta: "/admin" },
-            { texto: "Inventario", ruta: "/admin/inventario" },
-            { texto: "Gestión de usuarios", ruta: "/admin/usuarios" }
+            { texto: "Panel de administración", ruta: "/admin" }
         ]
     }
     return [{ texto: "Perfil", ruta: "/perfil" }]
